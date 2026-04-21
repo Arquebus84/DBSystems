@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<h1>Tables</h1>
+{% endblock %}
+
+{% block body %}
+<table class="tableFormat">
+    <th class="tableCellFormat">ID</th><th class="tableCellFormat">Name</th><th class="tableCellFormat">Actions</th>
+    <tr>
+        <td class="tableCellFormat">A</td>
+        <td class="tableCellFormat">B</td>
+        <td class="tableCellFormat">
+            <a href="">Delete</a>
+            <a href="">Update</a>
+        </td>
+    </tr>
+</table>
+{% endblock %}
+
+<!-- {% block faculty %}
+<div class="tableDiv">
+    <table class="tableFormat">
+        <th class="tableCellFormat">facultyID</th><th class="tableCellFormat">Faculty Last Name</th><th class="tableCellFormat">Faculty Type</th><th class="tableCellFormat">Actions</th>
+        <tr>
+            <td class="tableCellFormat"></td>
+            <td class="tableCellFormat"></td>
+            <td class="tableCellFormat"></td>
+            <td class="tableCellFormat">
+                <a href="">Delete</a>
+                <a href="">Update</a>
+            </td>
+        </tr>
+    </table>
+</div>
+<div>
+    <div class= "divForm">
+        <form action="/", method="POST", class="tableForm">
+            <input type="text", name="content", id="'content", class="tableInput">
+            <input type="text", name="content", id="'content", class="tableInput">
+            <input type="text", name="content", id="'content", class="tableInput">
+            <input type="submit", name="addRow">
+        </form>
+    </div>
+</div>
+{% endblock %} -->

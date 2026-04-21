@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block assignment %}
+<div class="tableDiv">
+    <table class="tableFormat">
+        <th class="tableCellFormat">facultyID</th><th class="tableCellFormat">roomID</th><th class="tableCellFormat">Actions</th>
+        <tr>
+            <td class="tableCellFormat"></td>
+            <td class="tableCellFormat"></td>
+            <td class="tableCellFormat">
+                <a href="">Delete</a>
+                <a href="">Update</a>
+            </td>
+        </tr>
+    </table>
+</div>
+<div>
+    <div class= "divForm">
+        <form action="/", method="POST", class="tableForm">
+            <input type="select", name="content", id="'content", class="tableInput">
+            <input type="select", name="content", id="'content", class="tableInput">
+            <input type="submit", name="addRow">
+        </form>
+    </div>
+</div>
+{% endblock %}

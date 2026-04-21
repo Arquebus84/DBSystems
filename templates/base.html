@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+<meta charset="UTF-8">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+<link href='https://fonts.googleapis.com' rel='stylesheet'>
+
+<!-- {% block head %}{% endblock %} -->
+<body lang="en">    
+    <div class="container-fluid p-0">
+        <nav class="navbar navbar-light" style="background-color: #53f5c4;">
+            <a class="navbar-brand" href="#">
+            Nursery Management Portal
+            </a>
+        </nav>
+    </div>
+    <div style="display:flex; gap:40px">
+        <div class="row g-0", style="width:28vw">
+            <div class="col-md-3 border-end", style="width:28vw">
+                <div class="buttonContainer">
+                    <!-- Patient Buttons: patient, family, room, net pay -->
+                    <div class="patientOptions">
+                        <h4 class="text-center">Patient Options</h4>
+                        <form action="/patient-contents">
+                            <div class="d-grid gap-2">
+                                <button class="btn btn-secondary w-75 mx-auto" id="patientBT" method="PATIENT">Patient</button>
+                                <button class="btn btn-secondary w-75 mx-auto" id="familyBT" method="FAMILY">Patient Family</button>
+                                <button class="btn btn-secondary w-75 mx-auto" id="roomBT" method="ROOM">Patient Rooms</button>
+                                <button class="btn btn-secondary w-75 mx-auto" id="paySumBT" method="PAYMENT">Payment Summary</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Faculty Buttons: faculty, room assignment -->
+                    <div class="facultyOptions">
+                        <h4 class="text-center">Faculty Options</h4>
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-secondary w-75 mx-auto" id="facultyBT">Faculty</button>
+                            <button class="btn btn-secondary w-75 mx-auto" id="assignBT">Faculty-Patient Assignment</button>
+                        </div>
+                    </div>
+                    <!-- Medication Buttons: medications, patient medications -->
+                    <div class="medicationOptions">
+                        <h4 class="text-center">Medication Options</h4>
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-secondary w-75 mx-auto" id="medicationBT">Medications</button>
+                            <button class="btn btn-secondary w-75 mx-auto" id="patientMedBT">Patient Medications</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="centerTables">
+            <div class="tables">
+                {% block patient %}{% endblock %}
+                {% block family %}{% endblock %}
+                {% block room %}{% endblock %}
+                {% block summary %}{% endblock %}
+
+                {% block faculty %}{% endblock %}
+                {% block assignment %}{% endblock %}
+
+                {% block medication %}{% endblock %}
+                {% block paitentMed %}{% endblock %}
+            </div>
+        </div>
+    </div>
+</body>
