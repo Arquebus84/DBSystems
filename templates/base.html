@@ -13,8 +13,8 @@
 <body lang="en">    
     <div class="container-fluid p-0">
         <nav class="navbar navbar-light" style="background-color: #53f5c4;">
-            <a class="navbar-brand" href="#">
-            Nursery Management Portal
+            <a class="navbar-brand" href="/home">
+                Nursery Management Portal
             </a>
         </nav>
     </div>
@@ -25,12 +25,12 @@
                     <!-- Patient Buttons: patient, family, room, net pay -->
                     <div class="patientOptions">
                         <h4 class="text-center">Patient Options</h4>
-                        <form action="/patient-contents">
+                        <form action="/home/patient-options" method="POST">
                             <div class="d-grid gap-2">
-                                <button class="btn btn-secondary w-75 mx-auto" id="patientBT" method="PATIENT">Patient</button>
-                                <button class="btn btn-secondary w-75 mx-auto" id="familyBT" method="FAMILY">Patient Family</button>
-                                <button class="btn btn-secondary w-75 mx-auto" id="roomBT" method="ROOM">Patient Rooms</button>
-                                <button class="btn btn-secondary w-75 mx-auto" id="paySumBT" method="PAYMENT">Payment Summary</button>
+                                <button class="btn btn-secondary w-75 mx-auto", id="patientBT", name="bt", value="patient-table">Patient</button>
+                                <button class="btn btn-secondary w-75 mx-auto", id="familyBT", name="bt", value="patient-family">Patient Family</button>
+                                <button class="btn btn-secondary w-75 mx-auto", id="roomBT", name="bt", value="patient-rooms">Patient Rooms</button>
+                                <button class="btn btn-secondary w-75 mx-auto", id="paySumBT", name="bt", value="patient-payment">Payment Summary</button>
                             </div>
                         </form>
                     </div>
@@ -38,18 +38,22 @@
                     <!-- Faculty Buttons: faculty, room assignment -->
                     <div class="facultyOptions">
                         <h4 class="text-center">Faculty Options</h4>
-                        <div class="d-grid gap-2">
-                            <button class="btn btn-secondary w-75 mx-auto" id="facultyBT">Faculty</button>
-                            <button class="btn btn-secondary w-75 mx-auto" id="assignBT">Faculty-Patient Assignment</button>
-                        </div>
+                        <form action="/home/faculty-options", method="POST">
+                            <div class="d-grid gap-2">
+                                <button class="btn btn-secondary w-75 mx-auto", id="facultyBT", name="bt", value="faculty-table">Faculty</button>
+                                <button class="btn btn-secondary w-75 mx-auto", id="assignBT", name="bt", value="faculty-assign">Faculty-Patient Assignment</button>
+                            </div>
+                        </form>
                     </div>
                     <!-- Medication Buttons: medications, patient medications -->
                     <div class="medicationOptions">
                         <h4 class="text-center">Medication Options</h4>
-                        <div class="d-grid gap-2">
-                            <button class="btn btn-secondary w-75 mx-auto" id="medicationBT">Medications</button>
-                            <button class="btn btn-secondary w-75 mx-auto" id="patientMedBT">Patient Medications</button>
-                        </div>
+                        <form action="/home/medication-options", method="POST">
+                            <div class="d-grid gap-2">
+                                <button class="btn btn-secondary w-75 mx-auto", id="medicationBT", name="bt", value="medication-table">Medications</button>
+                                <button class="btn btn-secondary w-75 mx-auto", id="patientMedBT", name="bt", value="medication-patient">Patient Medications</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -66,7 +70,7 @@
                 {% block assignment %}{% endblock %}
 
                 {% block medication %}{% endblock %}
-                {% block paitentMed %}{% endblock %}
+                {% block patientMed %}{% endblock %}
             </div>
         </div>
     </div>
