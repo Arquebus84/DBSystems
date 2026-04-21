@@ -17,14 +17,14 @@ class DatabaseTest(db.Model):
     def __repr__(self):
         return '<Task %r>' % self.id
     
-@app.route('/', methods=['POST', 'GET'])
-def index():
-    if(request.method == 'POST'):
-        # Grab the task and place it into the DB
-        return "Hello World"
-    else:
-        # Otherwise, just view the page
-        return render_template('base.html')
+# @app.route('/', methods=['POST', 'GET'])
+# def index():
+#     if(request.method == 'POST'):
+#         # Grab the task and place it into the DB
+#         return "Hello World"
+#     else:
+#         # Otherwise, just view the page
+#         return render_template('base.html')
     
 # @app.route('/patient-contents', methods=['PATIENT', 'FAMILY', 'ROOM', 'PAYMENT'])
 # def patientIndex():
