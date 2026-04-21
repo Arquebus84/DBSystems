@@ -23,8 +23,7 @@ CREATE TABLE `payment_system` (
   `paymentID` INTEGER NOT NULL UNIQUE AUTO_INCREMENT,
   `price` decimal(5, 2) NOT NULL,
   `tax` decimal(5, 2) NOT NULL,
-  PRIMARY KEY (`paymentID`),
-  Constraint `payment_system_uq1` Unique(`price`, `tax`)
+  PRIMARY KEY (`paymentID`)
 );
 
 --
@@ -105,6 +104,7 @@ CREATE TABLE `patient_room` (
 --
 DROP TABLE IF EXISTS `patient_med`;
 CREATE TABLE `patient_med` (
+  `patientMedID` INTEGER NOT NULL UNIQUE AUTO_INCREMENT,
   `patientID` INTEGER NOT NULL,
   `medicationID` INTEGER NOT NULL,
   PRIMARY KEY (`medicationID`,`patientID`),
@@ -131,10 +131,11 @@ CREATE TABLE `payment_summary` (
 --
 DROP TABLE IF EXISTS `assigned_room`;
 CREATE TABLE `assigned_room` (
+  `assignedRoomID` INTEGER NOT NULL UNIQUE AUTO_INCREMENT,
   `patientRoomID` INTEGER NOT NULL UNIQUE,
   `facultyID` INTEGER NOT NULL,
   `floorNumber` INTEGER,
-  PRIMARY KEY (`patientRoomID`,`facultyID`),
+  PRIMARY KEY (`assignedRoomID`),
   CONSTRAINT `assigned_room_ibfk_1` FOREIGN KEY (`patientRoomID`) REFERENCES `patient_room` (`patientroomID`),
   CONSTRAINT `assigned_room_chk_1` CHECK (((`floorNumber` > 0) and (`floorNumber` < 4)))
 );

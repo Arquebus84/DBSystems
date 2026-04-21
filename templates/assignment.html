@@ -4,7 +4,7 @@
 <div class="tableDiv">
     <table class="tableFormat">
         <tr>
-            <th class="tableCellFormat">PatientRoomID</th><th class="tableCellFormat">Faculty</th><th class="tableCellFormat">Patient First Name</th>
+            <th class="tableCellFormat">AssignedRoomID</th><th class="tableCellFormat">Faculty</th><th class="tableCellFormat">Patient First Name</th>
             <th class="tableCellFormat">Patient Last Name</th><th class="tableCellFormat">Room</th>
             <th class="tableCellFormat">Floor Number</th> <th class="tableCellFormat">Actions</th>
         </tr>
@@ -29,14 +29,14 @@
 <div>
     <div class= "divForm">
         <form action="/home/faculty-options/addAssignment", method="POST", class="tableForm">
-            <select id="'content" name="patientRoom", class="tableInput">
+            <select id="'content" name="patientRoomID", class="tableInput">
                 {% for rm in room %}
-                    <option>{{ rm[1] }}</option>
+                    <option value="{{ rm[0] }}">{{ rm[1] }}</option>
                 {% endfor %}
             </select>
-            <select id="'content" name="faculty", class="tableInput">
+            <select id="'content" name="facultyID", class="tableInput">
                  {% for f in faculty %}
-                    <option>{{ f[1] }}</option>
+                    <option value="{{ f[0] }}" >{{ f[1] }}</option>
                 {% endfor %} 
             </select>
             <input type="submit", name="addRow">

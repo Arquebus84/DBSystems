@@ -40,7 +40,7 @@ def getFacultyTable():
 def getFacultyTypeTable():
     return 'SELECT ft.facultyTypeID, ft.facultyType FROM faculty_type ft'
 def getAssignTable():
-    return 'SELECT ar.patientRoomID, f.facultyLastName AS facultyName, p.firstName AS firstName, p.lastName AS lastName, pr.patientRoomNumber AS roomNum, ' \
+    return 'SELECT ar.assignedRoomID, f.facultyLastName AS facultyName, p.firstName AS firstName, p.lastName AS lastName, pr.patientRoomNumber AS roomNum, ' \
     'case ' \
     'when (pr.patientRoomNumber >= 3000) then ifnull(ar.floorNumber, 3) ' \
     'when (pr.patientRoomNumber >= 2000) then ifnull(ar.floorNumber, 2) ' \
@@ -52,7 +52,7 @@ def getAssignTable():
 def getMedicationTable():
     return 'SELECT m.medicationID, m.medicationType, p.price, p.tax FROM medication m JOIN payment_system p WHERE p.paymentID = m.paymentID'
 def getPatientMedTable():
-    return 'SELECT p.firstName AS firstName, p.lastName AS lastName, med.medicationType AS medication ' \
+    return 'SELECT pmed.patientMedID, p.firstName AS firstName, p.lastName AS lastName, med.medicationType AS medication ' \
             'FROM patient_med pmed '\
             'JOIN medication med '\
             'JOIN patient p '\
@@ -60,18 +60,19 @@ def getPatientMedTable():
 #endregion
 
 #region Add tuples
-def addPatientRow(fName, lName, priority, condition, familyID):
+def addPatientRow(firstName, lastName, priority, condition, familyID):
     query = 'INSERT INTO patient (firstName, lastName, patientPriority, conditionDesc, familyID) ' \
     'VALUES (%s, %s, %s, %s, %s)'
-    values = [fName, lName, priority, condition, familyID]
+    values = [firstName, lastName, priority, condition, familyID]
     cursor.execute(query, values)
     db.commit()
 
-# def addFacultyRow(facultyLastName, facultyTypeID):
-#     query = 'INSERT INTO faculty (facultyLastName, facultyTypeID) VALUES (%s, %s)'
-#     values = [facultyLastName, facultyTypeID]
-#     cursor.execute(query, values)
-#     db.commit()
+def addFacultyRow(facultyLastName, facultyTypeID):
+    query = 'INSERT INTO faculty (facultyLastName, facultyTypeID) VALUES (%s, %s)'
+    values = [facultyLastName, facultyTypeID]
+    cursor.execute(query, values)
+    db.commit()
+
 def addFacultyTypeRow(facultyType):
     query = 'INSERT INTO faculty_type (facultyType) VALUES (%s)'
     values = [facultyType]
@@ -83,65 +84,42 @@ def addAssignmentRow(patientRoomID, facultyID):
     values = [patientRoomID, facultyID]
     cursor.execute(query, values)
     db.commit()
+
+def addMedication(medicationType, price, tax):
+    ID = None
+    query2 = None
+    # Check if the price and tax already exist
+    query1='SELECT paymentID from payment_system WHERE price = %s AND tax = %s'
+    values1 = [price, tax]
+    cursor.execute(query1, values1)
+    for x in cursor:
+        ID = str(x[0])  #Grab the first data, paymentID
+    if(ID == None):
+        cursor.fetchall()
+        query2 = 'INSERT IGNORE INTO payment_system (price, tax) VALUES (%s, %s)'
+        cursor.execute(query2, values1)
+        for n in cursor:
+            ID = str(n[0])
+    cursor.fetchall()
+    query3='INSERT INTO medication (medicationType, paymentID) VALUES (%s, %s)'
+    values2=[medicationType, ID]
+    cursor.execute(query3, values2)
+    db.commit()
+
 #endregion
 
+# Home Route
 @app.route('/')
 @app.route('/home')
 def index():
     return render_template('base.html')
 
-#region oldCode
-# @app.route('/home/add', methods=['POST', 'GET'])
-# def addMedication():
-#     return render_template('medication.html', medications=medications)
-
-    # medType = None
-    # form = MedForm()                            #The form in render_template will be equal to this form in this file
-    # if(form.validate_on_submit()):
-    #     med = Medication.query.filter_by(_medication=form._medication.data).first()
-    #     if(med is None):
-    #         med = Medication(_medication=form._medication.data)
-    #         db.session.add(med)
-    #         db.session.commit()
-    #     medType = form._medication.data
-    #     form._medication.data=''
-    #     form._price.data=''
-    #     form._tax.data=''
-    #     print("Medication Added")
-    # medications = Medication.query.group_by(Medication.medType)
-    # return render_template('medication.html', 
-    #                        form=form,
-    #                        medType=medType,
-    #                        medications=medications)
-
-# TODO: Trash this function
-def tableIndex():
-#     if(request.method == 'POST'):
-#         # Grab the data
-#         dbContent = request.form['medication']  # Request the name of the row in medication.html
-#         newMed = DatabaseTest(med = dbContent)
-
-#         #Push data into the DB
-#         try:
-#             db.session.add(newMed)
-#             db.session.commit()
-#             return redirect('/')
-#         except Exception as e:
-#             print(e)
-#             return 'Issue found when adding new data'
-#     else:
-#         # Otherwise, just view the page
-#         newRow = DatabaseTest.query.order_by(DatabaseTest.id).all()
-#         return render_template('medication.html', medication=newRow)
-    pass
-#endregion
-
 # Adding new rows
 @app.route('/home/patient-options/addPatient', methods=['POST', 'GET'])
 def newPatientRow():
     if(request.method == 'POST'):
-        patientFName=request.form['fName']
-        patientLName=request.form['lName']
+        patientFName=request.form['firstName']
+        patientLName=request.form['lastName']
         patientPriority=request.form['priority']
         patientCondition=request.form['condition']
         patientFamily=request.form['familyID']
@@ -151,28 +129,29 @@ def newPatientRow():
     cursor.execute(getFamilyTable())
     family = cursor.fetchall()
     return render_template('patient.html', patients=patients, family=family)
-@app.route('/home/patient-options/addFamily', methods=['POST', 'GET'])
+
+@app.route('/home/patient-options/addFamily', methods=['POST', 'GET'])      #Finish
 def newFamilyRow():
     if(request.method == 'POST'):
         pass
-@app.route('/home/patient-options/addRoom', methods=['POST', 'GET'])
+@app.route('/home/patient-options/addRoom', methods=['POST', 'GET'])        #Finish
 def newRoomRow():
     if(request.method == 'POST'):
         pass
 
 @app.route('/home/faculty-options/addFaculty', methods=['POST', 'GET'])
-# def newFacultyRow():
-#     if(request.method == 'POST'):
-#         facultyLastName = request.form['facultyLastName']
-#         facultyTypeID = request.form['facultyTypeID']
-#         addFacultyRow(facultyLastName, facultyTypeID)
-#     cursor.execute(getFacultyTable())
-#     faculty = cursor.fetchall()
-#     cursor.execute(getFacultyTypeTable())
-#     facultyType = cursor.fetchall()
-#     return render_template('faculty.html', faculty=faculty, facultyType=facultyType)
+def newFacultyRow():
+    if(request.method == 'POST'):
+        facultyLastName = request.form['facultyLastName']
+        facultyTypeID = request.form['facultyTypeID']
+        addFacultyRow(facultyLastName, facultyTypeID)
+    cursor.execute(getFacultyTable())
+    faculty = cursor.fetchall()
+    cursor.execute(getFacultyTypeTable())
+    facultyType = cursor.fetchall()
+    return render_template('faculty.html', faculty=faculty, facultyType=facultyType)
 
-@app.route('/home/faculty-options/addFacultyType', methods=['POST', 'GET'])
+@app.route('/home/faculty-options/addFacultyType', methods=['POST', 'GET']) 
 def newFacultyTypeRow():
     if(request.method == 'POST'):
         facultyType=request.form['facultyType']
@@ -195,8 +174,25 @@ def newAssignmentRow():
     faculty = cursor.fetchall()
     return render_template('assignment.html', assign=assign, room=room, faculty=faculty)
 
+@app.route('/home/medication-options/addMedication', methods=['POST', 'GET'])
+def newMedication():
+    if(request.method == 'POST'):
+        medicationType = request.form['medicationType']
+        price = request.form['price']
+        tax = request.form['tax']
+        addMedication(medicationType, price, tax)
+    cursor.execute(getMedicationTable())
+    medications = cursor.fetchall()
+    return render_template('medication.html', medications=medications)
+
+@app.route('/home/medication-options/addPatientMedication', methods=['POST', 'GET']) #Finish
+
 # Deleting rows
-@app.route('/home/faculty-options/deleteFacultyType/<int:id>', methods=['POST', 'GET'])
+@app.route('/home/patient-options/deletePatient/<int:id>', methods=['POST', 'GET']) #Finish
+@app.route('/home/patient-options/deleteFamily/<int:id>', methods=['POST', 'GET'])  #Finish
+@app.route('/home/patient-options/deleteRoom/<int:id>', methods=['POST', 'GET'])    #Finish
+
+@app.route('/home/faculty-options/deleteFaculty/<int:id>', methods=['POST', 'GET'])
 def deleteFaculty(id):
     # Delete specific row and update the autoincrement to the highest value
     try:
@@ -224,8 +220,26 @@ def deleteFacultyType(id):
         return "failed to delete"
     
     return redirect('/home')
+@app.route('/home/faculty-options/deleteAssignment/<int:id>', methods=['POST', 'GET'])  #Finish
 
-# Options for each button
+@app.route('/home/medication-options/deleteMedication/<int:id>', methods=['POST', 'GET'])   #Finish
+def deleteMedication(id):
+    # Delete specific row and update the autoincrement to the highest value
+    try:
+        query1 = 'DELETE FROM medication WHERE medicationID = %s'
+        query2 = 'ALTER TABLE medication AUTO_INCREMENT = 1'
+        values = [id]
+        cursor.execute(query1, values)
+        cursor.execute(query2)
+        db.commit()
+    except:
+        return "failed to delete"
+    
+    return redirect('/home')
+
+@app.route('/home/medication-options/deletePatientMedication/<int:id>', methods=['POST', 'GET'])    #Finish
+
+# Navigation Options for each button ==> Opens each table
 @app.route('/home/patient-options', methods=['POST', 'GET'])
 def patient_options():
     pressed = request.form.get('bt')
@@ -285,7 +299,11 @@ def medication_options():
     elif(pressed == 'medication-patient'):
         cursor.execute(getPatientMedTable())
         patient_medications = cursor.fetchall()
-        return render_template('patientMed.html', patient_medications=patient_medications)
+        cursor.execute(getPatientTable())
+        patients = cursor.fetchall()
+        cursor.execute(getMedicationTable())
+        medications = cursor.fetchall()
+        return render_template('patientMed.html', patient_medications=patient_medications, patients=patients, medications=medications)
     
     else:
         return render_template('base.html')

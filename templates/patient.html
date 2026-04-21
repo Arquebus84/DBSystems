@@ -33,9 +33,9 @@
             <input type="select", id="'content" name="lastName", class="tableInput">
             <input type="select", id="'content" name="priority", class="tableInput">
             <input type="select", id="'content" name="condition", class="tableInput">
-            <select id="'content" name="familyLastName", class="tableInput">
+            <select id="'content" name="familyID", class="tableInput">
                 {% for fam in family %}
-                    <option>{{ fam[1] }}</option>
+                    <option value="{{ fam[0] }}">{{ fam[1] }}</option>
                 {% endfor %}
             </select>
             <input type="submit", name="addRow">

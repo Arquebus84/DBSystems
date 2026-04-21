@@ -16,7 +16,7 @@
                 <td class="tableCellFormat">{{ f[1] }}</td>
                 <td class="tableCellFormat">{{ f[2] }}</td>
                 <td class="tableCellFormat">
-                    <a href="">Delete</a>
+                    <a href="{{ url_for('deleteFaculty', id=f[0]) }}">Delete</a>
                     <a href="">Update</a>
                 </td>
             </tr>
@@ -27,10 +27,10 @@
 <div>
     <div class= "divForm">
         <form action="/home/faculty-options/addFaculty", method="POST", class="tableForm">
-            <input type="select", id="'content" name="facultyLastName", class="tableInput">
+            <input type="select", id="content" name="facultyLastName", class="tableInput">
             <select id="'content" name="facultyTypeID", class="tableInput">
                 {% for type in facultyType %}
-                    <option>{{ type[1] }}</option>
+                    <option value="{{ type[0] }}">{{ type[1] }}</option>
                 {% endfor %}
             </select>
             <input type="submit", name="addRow">

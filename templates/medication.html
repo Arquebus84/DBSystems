@@ -16,7 +16,7 @@
                     <td class="tableCellFormat">{{ med[2] }}</td>
                     <td class="tableCellFormat">{{ med[3] }}</td>
                     <td class="tableCellFormat">        <!--Action Column-->
-                        <a href="">Delete</a>
+                        <a href="{{ url_for('deleteMedication', id=med[0]) }}">Delete</a>
                         <a href="">Update</a>
                     </td>
                 </tr>
@@ -26,9 +26,9 @@
 </div>
 <div>
     <div class= "divForm">
-        <form action="/home/medication-options/add", method="POST", class="tableForm">
+        <form action="/home/medication-options/addMedication", method="POST", class="tableForm">
             <!-- <input type="select", id="'content", name="ID", class="tableInput"> -->
-            <input type="select", id="'content", name="medication", class="tableInput">
+            <input type="select", id="'content", name="medicationType", class="tableInput">
             <input type="select", id="'content", name="price", class="tableInput">
             <input type="select", id="'content", name="tax", class="tableInput">
             <input type="submit", name="addRow">
