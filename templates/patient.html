@@ -3,32 +3,38 @@
 {% block patient %}
 <div class="tableDiv">
     <table class="tableFormat">
-        <th class="tableCellFormat">patientID</th><th class="tableCellFormat">firstName</th><th class="tableCellFormat">lastName</th>
-        <th class="tableCellFormat">priority</th><th class="tableCellFormat">conditions</th><th class="tableCellFormat">familyLastName</th>
-        <th class="tableCellFormat">Actions</th>
         <tr>
-            <td class="tableCellFormat"></td>
-            <td class="tableCellFormat"></td>
-            <td class="tableCellFormat"></td>
-            <td class="tableCellFormat"></td>
-            <td class="tableCellFormat"></td>
-            <td class="tableCellFormat"></td>
-            <td class="tableCellFormat">
-                <a href="">Delete</a>
-                <a href="">Update</a>
-            </td>
+            <th class="tableCellFormat">patientID</th><th class="tableCellFormat">firstName</th><th class="tableCellFormat">lastName</th>
+            <th class="tableCellFormat">priority</th><th class="tableCellFormat">conditions</th><th class="tableCellFormat">familyLastName</th>
+            <th class="tableCellFormat">Actions</th>
+        </tr>
+        <tr>
+            {% for patient in patients %}
+            <tr>
+                <td class="tableCellFormat">{{ patient[0] }}</td>
+                <td class="tableCellFormat">{{ patient[1] }}</td>
+                <td class="tableCellFormat">{{ patient[2] }}</td>
+                <td class="tableCellFormat">{{ patient[3] }}</td>
+                <td class="tableCellFormat">{{ patient[4] }}</td>
+                <td class="tableCellFormat">{{ patient[5] }}</td>
+                <td class="tableCellFormat">
+                    <a href="">Delete</a>
+                    <a href="">Update</a>
+                </td>
+            </tr>
+            {% endfor %}
         </tr>
     </table>
 </div>
 <div>
     <div class= "divForm">
-        <form action="/content", method="POST", class="tableForm">
-            <input type="select", name="content", id="'content", class="tableInput">
-            <input type="select", name="content", id="'content", class="tableInput">
-            <input type="select", name="content", id="'content", class="tableInput">
-            <input type="select", name="content", id="'content", class="tableInput">
-            <input type="select", name="content", id="'content", class="tableInput">
-            <input type="select", name="content", id="'content", class="tableInput">
+        <form action="/home/add", method="POST", class="tableForm">
+            <input type="select", id="'content" name="content", class="tableInput">
+            <input type="select", id="'content" name="content", class="tableInput">
+            <input type="select", id="'content" name="content", class="tableInput">
+            <input type="select", id="'content" name="content", class="tableInput">
+            <input type="select", id="'content" name="content", class="tableInput">
+            <input type="select", id="'content" name="content", class="tableInput">
             <input type="submit", name="addRow">
         </form>
     </div>

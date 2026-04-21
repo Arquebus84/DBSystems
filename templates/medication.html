@@ -3,24 +3,33 @@
 {% block medication %}
 <div class="tableDiv">
     <table class="tableFormat">
-        <th class="tableCellFormat">medicationID</th><th class="tableCellFormat">Price</th><th class="tableCellFormat">Tax</th><th class="tableCellFormat">Actions</th>
         <tr>
-            <td class="tableCellFormat"></td>
-            <td class="tableCellFormat"></td>
-            <td class="tableCellFormat"></td>
-            <td class="tableCellFormat">
-                <a href="">Delete</a>
-                <a href="">Update</a>
-            </td>
+            <th class="tableCellFormat">Medication</th><th class="tableCellFormat">Price</th>
+            <th class="tableCellFormat">Tax</th><th class="tableCellFormat">Actions</th>
+        </tr>
+        <tr>
+            {% for med in medications %}
+                <tr>
+                    <!-- <td class="tableCellFormat"></td> -->
+                    <td class="tableCellFormat">{{ med[0] }}</td>
+                    <td class="tableCellFormat">{{ med[1] }}</td>
+                    <td class="tableCellFormat">{{ med[2] }}</td>
+                    <td class="tableCellFormat">        <!--Action Column-->
+                        <a href="">Delete</a>
+                        <a href="">Update</a>
+                    </td>
+                </tr>
+            {% endfor %}
         </tr>
     </table>
 </div>
 <div>
     <div class= "divForm">
-        <form action="/content", method="POST", class="tableForm">
-            <input type="select", name="content", id="'content", class="tableInput">
-            <input type="select", name="content", id="'content", class="tableInput">
-            <input type="select", name="content", id="'content", class="tableInput">
+        <form action="/home/add", method="POST", class="tableForm">
+            <!-- <input type="select", id="'content", name="ID", class="tableInput"> -->
+            <input type="select", id="'content", name="medication", class="tableInput">
+            <input type="select", id="'content", name="price", class="tableInput">
+            <input type="select", id="'content", name="tax", class="tableInput">
             <input type="submit", name="addRow">
         </form>
     </div>

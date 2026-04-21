@@ -3,24 +3,30 @@
 {% block room %}
 <div class="tableDiv">
     <table class="tableFormat">
-        <th class="tableCellFormat">roomID</th><th class="tableCellFormat">patientID</th><th class="tableCellFormat">Room Number</th><th class="tableCellFormat">Actions</th>
         <tr>
-            <td class="tableCellFormat"></td>
-            <td class="tableCellFormat"></td>
-            <td class="tableCellFormat"></td>
-            <td class="tableCellFormat">
-                <a href="">Delete</a>
-                <a href="">Update</a>
-            </td>
+            <th class="tableCellFormat">roomID</th><th class="tableCellFormat">patientID</th><th class="tableCellFormat">Room Number</th><th class="tableCellFormat">Actions</th>
+        </tr>
+        <tr>
+            {% for r in room %}
+                <tr>
+                    <td class="tableCellFormat">{{ r[0] }}</td>
+                    <td class="tableCellFormat">{{ r[1] }}</td>
+                    <td class="tableCellFormat">{{ r[2] }}</td>
+                    <td class="tableCellFormat">
+                        <a href="">Delete</a>
+                        <a href="">Update</a>
+                    </td>
+                </tr>
+            {% endfor %}
         </tr>
     </table>
 </div>
 <div>
     <div class= "divForm">
-        <form action="/content", method="POST", class="tableForm">
-            <input type="select", name="content", id="'content", class="tableInput">
-            <input type="select", name="content", id="'content", class="tableInput">
-            <input type="select", name="content", id="'content", class="tableInput">
+        <form action="/home/add", method="POST", class="tableForm">
+            <input type="select", id="'content" name="content", class="tableInput">
+            <input type="select", id="'content" name="content", class="tableInput">
+            <input type="select", id="'content" name="content", class="tableInput">
             <input type="submit", name="addRow">
         </form>
     </div>
