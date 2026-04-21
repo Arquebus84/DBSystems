@@ -4,8 +4,8 @@
 <div class="tableDiv">
     <table class="tableFormat">
         <tr>
-            <th class="tableCellFormat">Payment Total</th><th class="tableCellFormat">firstName</th><th class="tableCellFormat">lastName</th>
-            <th class="tableCellFormat">Actions</th>
+            <th class="tableCellFormat">Payment Total</th><th class="tableCellFormat">firstName</th>
+            <th class="tableCellFormat">lastName</th>
         </tr>
         <tr>
             {% for sum in summary %}
@@ -13,10 +13,6 @@
                 <td class="tableCellFormat">{{ sum[0] }}</td>
                 <td class="tableCellFormat">{{ sum[1] }}</td>
                 <td class="tableCellFormat">{{ sum[2] }}</td>
-                <td class="tableCellFormat">
-                    <a href="">Delete</a>
-                    <a href="">Update</a>
-                </td>
             </tr>
             {% endfor %}
         </tr>
@@ -24,10 +20,8 @@
 </div>
 <div>
     <div class= "divForm">
-        <form action="/home/add", method="POST", class="tableForm">
-            <input type="select", id="'content" name="content", class="tableInput">
-            <input type="select", id="'content" name="content", class="tableInput">
-            <input type="select", id="'content" name="content", class="tableInput">
+        <form action="/home/patient-options/add", method="POST", class="tableForm">
+            <input type="select", id="'content" name="patient", class="tableInput">
             <input type="submit", name="addRow">
         </form>
     </div>

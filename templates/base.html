@@ -41,6 +41,7 @@
                         <form action="/home/faculty-options", method="POST">
                             <div class="d-grid gap-2">
                                 <button class="btn btn-secondary w-75 mx-auto", id="facultyBT", name="bt", value="faculty-table">Faculty</button>
+                                <button class="btn btn-secondary w-75 mx-auto", id="facultyTypeBT", name="bt", value="faculty-type-table">Faculty Type</button>
                                 <button class="btn btn-secondary w-75 mx-auto", id="assignBT", name="bt", value="faculty-assign">Faculty-Patient Assignment</button>
                             </div>
                         </form>
@@ -67,6 +68,7 @@
                 {% block summary %}{% endblock %}
 
                 {% block faculty %}{% endblock %}
+                {% block facultyType %}{% endblock %}
                 {% block assignment %}{% endblock %}
 
                 {% block medication %}{% endblock %}

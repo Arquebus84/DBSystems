@@ -28,15 +28,29 @@
 </div>
 <div>
     <div class= "divForm">
-        <form action="/home/add", method="POST", class="tableForm">
-            <input type="select", id="'content" name="content", class="tableInput">
-            <input type="select", id="'content" name="content", class="tableInput">
-            <input type="select", id="'content" name="content", class="tableInput">
-            <input type="select", id="'content" name="content", class="tableInput">
-            <input type="select", id="'content" name="content", class="tableInput">
-            <input type="select", id="'content" name="content", class="tableInput">
+        <form action="/home/patient-options/addPatient", method="POST", class="tableForm">
+            <input type="select", id="'content" name="firstName", class="tableInput">
+            <input type="select", id="'content" name="lastName", class="tableInput">
+            <input type="select", id="'content" name="priority", class="tableInput">
+            <input type="select", id="'content" name="condition", class="tableInput">
+            <select id="'content" name="familyLastName", class="tableInput">
+                {% for fam in family %}
+                    <option>{{ fam[1] }}</option>
+                {% endfor %}
+            </select>
             <input type="submit", name="addRow">
         </form>
     </div>
 </div>
+<!-- <div>
+    <table class="tableFormat">
+        <tr>
+            {% for fam in family %}
+                <tr>
+                    <td class="tableCellFormat">{{ fam[1] }}</td>
+                </tr>
+            {% endfor %}
+        </tr>
+    </table>
+</div> -->
 {% endblock %}

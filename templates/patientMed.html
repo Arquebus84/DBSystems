@@ -3,12 +3,13 @@
 {% block patientMed %}
 <div class="tableDiv">
     <table class="tableFormat">
-        <th class="tableCellFormat">Patient</th><th class="tableCellFormat">Medication</th><th class="tableCellFormat">Actions</th>
+        <th class="tableCellFormat">Patient First Name</th> <th class="tableCellFormat">Patient Last Name</th><th class="tableCellFormat">Medication</th><th class="tableCellFormat">Actions</th>
         <tr>
             {% for patientMed in patient_medications %}
                 <tr>
                     <td class="tableCellFormat">{{ patientMed[0] }}</td>
                     <td class="tableCellFormat">{{ patientMed[1] }}</td>
+                    <td class="tableCellFormat">{{ patientMed[2] }}</td>
                     <td class="tableCellFormat">
                         <a href="">Delete</a>
                         <a href="">Update</a>
@@ -20,7 +21,7 @@
 </div>
 <div>
     <div class= "divForm">
-        <form action="/home/add", method="POST", class="tableForm">
+        <form action="/home/medication-patient/add", method="POST", class="tableForm">
             <input type="select", id="'content" name="Patient", class="tableInput">
             <input type="select", id="'content" name="Medication", class="tableInput">
             <input type="submit", name="addRow">

@@ -4,13 +4,14 @@
 <div class="tableDiv">
     <table class="tableFormat">
         <tr>
-            <th class="tableCellFormat">Family</th><th class="tableCellFormat">Phone Number</th><th class="tableCellFormat">Actions</th>
+            <th class="tableCellFormat">FamilyID</th><th class="tableCellFormat">Family Last Name</th> <th class="tableCellFormat">Phone Number</th><th class="tableCellFormat">Actions</th>
         </tr>
         <tr>
             {% for fam in family %}
             <tr>
                 <td class="tableCellFormat">{{ fam[0] }}</td>
                 <td class="tableCellFormat">{{ fam[1] }}</td>
+                <td class="tableCellFormat">{{ fam[2] }}</td>
                 <td class="tableCellFormat">
                     <a href="">Delete</a>
                     <a href="">Update</a>
@@ -22,9 +23,9 @@
 </div>
 <div>
     <div class= "divForm">
-        <form action="/home/add", method="POST", class="tableForm">
-            <input type="select", id="'content" name="content", class="tableInput">
-            <input type="select", id="'content" name="content", class="tableInput">
+        <form action="/home/patient-options/addFamily", method="POST", class="tableForm">
+            <input type="select", id="'content" name="familLastName", class="tableInput">
+            <input type="select", id="'content" name="phoneNumber", class="tableInput">
             <input type="submit", name="addRow">
         </form>
     </div>

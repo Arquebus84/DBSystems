@@ -4,8 +4,9 @@
 <div class="tableDiv">
     <table class="tableFormat">
         <tr>
-            <th class="tableCellFormat">Faculty</th><th class="tableCellFormat">Patient First Name</th><th class="tableCellFormat">Patient Last Name</th>
-            <th class="tableCellFormat">Room</th><th class="tableCellFormat">Floor Number</th> <th class="tableCellFormat">Actions</th>
+            <th class="tableCellFormat">PatientRoomID</th><th class="tableCellFormat">Faculty</th><th class="tableCellFormat">Patient First Name</th>
+            <th class="tableCellFormat">Patient Last Name</th><th class="tableCellFormat">Room</th>
+            <th class="tableCellFormat">Floor Number</th> <th class="tableCellFormat">Actions</th>
         </tr>
         <tr>
             {% for a in assign %}
@@ -15,6 +16,7 @@
                 <td class="tableCellFormat">{{ a[2] }}</td>
                 <td class="tableCellFormat">{{ a[3] }}</td>
                 <td class="tableCellFormat">{{ a[4] }}</td>
+                <td class="tableCellFormat">{{ a[5] }}</td>
                 <td class="tableCellFormat">
                     <a href="">Delete</a>
                     <a href="">Update</a>
@@ -26,9 +28,17 @@
 </div>
 <div>
     <div class= "divForm">
-        <form action="/home/add", method="POST", class="tableForm">
-            <input type="select", id="'content" name="content", class="tableInput">
-            <input type="select", id="'content" name="content", class="tableInput">
+        <form action="/home/faculty-options/addAssignment", method="POST", class="tableForm">
+            <select id="'content" name="patientRoom", class="tableInput">
+                {% for rm in room %}
+                    <option>{{ rm[1] }}</option>
+                {% endfor %}
+            </select>
+            <select id="'content" name="faculty", class="tableInput">
+                 {% for f in faculty %}
+                    <option>{{ f[1] }}</option>
+                {% endfor %} 
+            </select>
             <input type="submit", name="addRow">
         </form>
     </div>

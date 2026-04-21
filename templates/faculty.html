@@ -6,7 +6,8 @@
 <div class="tableDiv">
     <table class="tableFormat">
         <tr>
-            <th class="tableCellFormat">facultyID</th><th class="tableCellFormat">Faculty Last Name</th><th class="tableCellFormat">Faculty Type</th><th class="tableCellFormat">Actions</th>
+            <th class="tableCellFormat">FacultyID</th><th class="tableCellFormat">Faculty Last Name</th>
+            <th class="tableCellFormat">Faculty Type</th><th class="tableCellFormat">Actions</th>
         </tr>
         <tr>
             {% for f in faculty%}
@@ -25,10 +26,13 @@
 </div>
 <div>
     <div class= "divForm">
-        <form action="/home/add", method="POST", class="tableForm">
-            <input type="select", id="'content" name="content", class="tableInput">
-            <input type="select", id="'content" name="content", class="tableInput">
-            <input type="select", id="'content" name="content", class="tableInput">
+        <form action="/home/faculty-options/addFaculty", method="POST", class="tableForm">
+            <input type="select", id="'content" name="facultyLastName", class="tableInput">
+            <select id="'content" name="facultyTypeID", class="tableInput">
+                {% for type in facultyType %}
+                    <option>{{ type[1] }}</option>
+                {% endfor %}
+            </select>
             <input type="submit", name="addRow">
         </form>
     </div>

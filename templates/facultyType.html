@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block facultyType %}
+<div class="tableDiv">
+    <table class="tableFormat">
+        <tr>
+            <th class="tableCellFormat">FacultyTypeID</th><th class="tableCellFormat">Type</th><th class="tableCellFormat">Actions</th>
+        </tr>
+        <tr>
+            {% for t in facultyType%}
+            <tr>
+                <td class="tableCellFormat">{{ t[0] }}</td>
+                <td class="tableCellFormat">{{ t[1] }}</td>
+                <td class="tableCellFormat">
+                    <a href="{{ url_for('deleteFacultyType', id=t[0]) }}">Delete</a>
+                    <a href="">Update</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tr>
+    </table>
+</div>
+<div>
+    <div class= "divForm">
+        <form action="/home/faculty-options/addFacultyType", method="POST", class="tableForm">
+            <input type="select", id="'content" name="facultyType", class="tableInput">
+            <input type="submit", name="addRow">
+        </form>
+    </div>
+</div>
+{% endblock %}

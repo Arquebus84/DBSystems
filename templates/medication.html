@@ -4,7 +4,7 @@
 <div class="tableDiv">
     <table class="tableFormat">
         <tr>
-            <th class="tableCellFormat">Medication</th><th class="tableCellFormat">Price</th>
+            <th class="tableCellFormat">MedicationID</th><th class="tableCellFormat">Medication</th><th class="tableCellFormat">Price</th>
             <th class="tableCellFormat">Tax</th><th class="tableCellFormat">Actions</th>
         </tr>
         <tr>
@@ -14,6 +14,7 @@
                     <td class="tableCellFormat">{{ med[0] }}</td>
                     <td class="tableCellFormat">{{ med[1] }}</td>
                     <td class="tableCellFormat">{{ med[2] }}</td>
+                    <td class="tableCellFormat">{{ med[3] }}</td>
                     <td class="tableCellFormat">        <!--Action Column-->
                         <a href="">Delete</a>
                         <a href="">Update</a>
@@ -25,7 +26,7 @@
 </div>
 <div>
     <div class= "divForm">
-        <form action="/home/add", method="POST", class="tableForm">
+        <form action="/home/medication-options/add", method="POST", class="tableForm">
             <!-- <input type="select", id="'content", name="ID", class="tableInput"> -->
             <input type="select", id="'content", name="medication", class="tableInput">
             <input type="select", id="'content", name="price", class="tableInput">

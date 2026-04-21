@@ -4,7 +4,8 @@
 <div class="tableDiv">
     <table class="tableFormat">
         <tr>
-            <th class="tableCellFormat">roomID</th><th class="tableCellFormat">patientID</th><th class="tableCellFormat">Room Number</th><th class="tableCellFormat">Actions</th>
+            <th class="tableCellFormat">roomID</th><th class="tableCellFormat">Room Number</th>
+            <th class="tableCellFormat">Patient First Name</th><th class="tableCellFormat">Actions</th>
         </tr>
         <tr>
             {% for r in room %}
@@ -23,10 +24,9 @@
 </div>
 <div>
     <div class= "divForm">
-        <form action="/home/add", method="POST", class="tableForm">
-            <input type="select", id="'content" name="content", class="tableInput">
-            <input type="select", id="'content" name="content", class="tableInput">
-            <input type="select", id="'content" name="content", class="tableInput">
+        <form action="/home/patient-options/addRoom", method="POST", class="tableForm">
+            <input type="select", id="'content" name="roomID", class="tableInput">
+            <input type="select", id="'content" name="patientID", class="tableInput">
             <input type="submit", name="addRow">
         </form>
     </div>
