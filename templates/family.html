@@ -25,11 +25,7 @@
     <div class= "divForm">
         <form action="/home/patient-options/addFamily", method="POST", class="tableForm">
             <input type="select", id="'content" name="familyLastName", class="tableInput">
-            <select id="'content" name="phoneNumberID", class="tableInput">
-                {% for num in phoneNumber %}
-                <option></option>
-                {% endfor %}
-            </select>
+            <input type="select"m id="'content" name="phoneNumberID", class="tableInput">
             <input type="submit", name="addRow">
         </form>
     </div>

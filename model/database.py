@@ -11,30 +11,57 @@ def check_connection():
             password='ithertzwhenIP#1984',
             database='nursingHomeDB'
         )
-        ID = None
         cursor = db.cursor()
-        query1= 'Select paymentID, price, tax from payment_system'
-        query2 = 'SELECT paymentID FROM payment_system WHERE price = %s AND tax = %s'
-        values = ('10.5', '1.64')
-        cursor.execute(query2, values)
+        #region first test
+        # ID = None
+        # query1= 'Select paymentID, price, tax from payment_system'
+        # query2 = 'SELECT paymentID FROM payment_system WHERE price = %s AND tax = %s'
+        # values = ('10.5', '1.64')
+        # cursor.execute(query2, values)
+        # # cursor.fetchall()
+        # for x in cursor:
+        #     ID = str(x[0])
+        #     print(ID)
+        # if ID is None:
+        #     cursor.fetchall()
+        #     query3 = 'Insert IGNORE into payment_system (price, tax) values (%s, %s)'
+        #     cursor.execute(query3, values)
+        #     cursor.fetchall()
+        #     cursor.execute(query1)
+        #     for n in cursor:
+        #         ID = str(n[0])
+        #         print(ID, str(n[1]), str(n[2]))
+        # print(ID)
+        # for x in cursor:
+        #     print(x)
+        # db.commit()
+        # endregion
+        
+        numberID = None
+        query0 = 'SELECT numberID from phone_number'
+        query1 = 'SELECT numberID from phone_number WHERE phone_number.phoneNumber = %s'
+        value = ['912-210-4218']
+        cursor.execute(query1, value)
         # cursor.fetchall()
         for x in cursor:
-            ID = str(x[0])
-            print(ID)
-        if ID is None:
+            numberID = str(x[0])
+        if (numberID is None):
             cursor.fetchall()
-            query3 = 'Insert IGNORE into payment_system (price, tax) values (%s, %s)'
-            cursor.execute(query3, values)
-            cursor.fetchall()
-            cursor.execute(query1)
+            query2 = 'INSERT IGNORE INTO phone_number (phoneNumber) VALUES (%s)'
+            cursor.execute(query2, value)
             for n in cursor:
-                ID = str(n[0])
-                print(ID, str(n[1]), str(n[2]))
-        print(ID)
+                numberID = str(n[0])
+        cursor.fetchall()
+        # print(numberID)
+        query3 = 'INSERT IGNORE INTO trusted_family (familyLastName, phoneNumberID) VALUES (%s, %s)'
+        value2 = ['Ventura', numberID]
+        cursor.execute(query3, value2)
+        cursor.fetchall()
+        cursor.execute('SELECT familyLastName, phoneNumberID from trusted_family')
         for x in cursor:
             print(x)
         db.commit()
-        
+
         return 'Valid'
     except mysql.connector.Error as e:
         print(e)

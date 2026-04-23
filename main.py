@@ -22,7 +22,8 @@ def getPatientTable():
     return 'SELECT p.patientID AS ID, p.firstName AS firstName, p.lastName AS lastName, p.patientPriority AS priority, ' \
     'p.conditionDesc AS conditionDesc, tf.familyLastName AS familyContact ' \
     'FROM patient p JOIN trusted_family tf ' \
-    'ON p.familyID = tf.familyID'
+    'ON p.familyID = tf.familyID \
+    ORDER BY p.patientID'
 def getFamilyTable():
     return 'SELECT tf.familyID, tf.familyLastName AS familyName, pn.phoneNumber AS phoneNumber ' \
     'FROM trusted_family tf JOIN phone_number pn WHERE tf.phoneNumberID = pn.numberID'
@@ -67,6 +68,29 @@ def addPatientRow(firstName, lastName, priority, condition, familyID):
     cursor.execute(query, values)
     db.commit()
 
+def addFamilyRow(familyLastName, phoneNumber):
+    # Update the phone number table to account for matching numbers
+    numberID = None
+    query1 = 'SELECT numberID from phone_number WHERE phone_number.phoneNumber = %s'
+    value = [phoneNumber]
+    cursor.execute(query1, value)
+    # cursor.fetchall()
+    for x in cursor:
+        numberID = str(x[0])
+    if (numberID is None):
+        cursor.fetchall()
+        query2 = 'INSERT IGNORE INTO phone_number (phoneNumber) VALUES (%s)'
+        cursor.execute(query2, value)
+        for n in cursor:
+            numberID = str(n[0])
+    cursor.fetchall()
+    query3 = 'INSERT INTO trusted_family (familyLastName, phoneNumberID) VALUES (%s, %s)'
+    value2 = [familyLastName, numberID]
+    cursor.execute(query3, value2)
+    db.commit()
+def addRoomRow():
+    pass
+
 def addFacultyRow(facultyLastName, facultyTypeID):
     query = 'INSERT INTO faculty (facultyLastName, facultyTypeID) VALUES (%s, %s)'
     values = [facultyLastName, facultyTypeID]
@@ -85,7 +109,7 @@ def addAssignmentRow(patientRoomID, facultyID):
     cursor.execute(query, values)
     db.commit()
 
-def addMedication(medicationType, price, tax):
+def addMedicationRow(medicationType, price, tax):
     ID = None
     query2 = None
     # Check if the price and tax already exist
@@ -105,6 +129,9 @@ def addMedication(medicationType, price, tax):
     values2=[medicationType, ID]
     cursor.execute(query3, values2)
     db.commit()
+
+def addPatientMedRow():
+    pass
 
 #endregion
 
@@ -180,7 +207,7 @@ def newMedication():
         medicationType = request.form['medicationType']
         price = request.form['price']
         tax = request.form['tax']
-        addMedication(medicationType, price, tax)
+        addMedicationRow(medicationType, price, tax)
     cursor.execute(getMedicationTable())
     medications = cursor.fetchall()
     return render_template('medication.html', medications=medications)
@@ -189,8 +216,15 @@ def newMedication():
 
 # Deleting rows
 @app.route('/home/patient-options/deletePatient/<int:id>', methods=['POST', 'GET']) #Finish
+#Deleting patient will also have to search for medications and assigned rooms related to the patient 
+def deletePatient():
+    pass
 @app.route('/home/patient-options/deleteFamily/<int:id>', methods=['POST', 'GET'])  #Finish
+def deleteFamily():
+    pass
 @app.route('/home/patient-options/deleteRoom/<int:id>', methods=['POST', 'GET'])    #Finish
+def deleteRoom():
+    pass
 
 @app.route('/home/faculty-options/deleteFaculty/<int:id>', methods=['POST', 'GET'])
 def deleteFaculty(id):
@@ -221,6 +255,8 @@ def deleteFacultyType(id):
     
     return redirect('/home')
 @app.route('/home/faculty-options/deleteAssignment/<int:id>', methods=['POST', 'GET'])  #Finish
+def deleteAssign(id):
+    pass
 
 @app.route('/home/medication-options/deleteMedication/<int:id>', methods=['POST', 'GET'])   #Finish
 def deleteMedication(id):
@@ -238,6 +274,8 @@ def deleteMedication(id):
     return redirect('/home')
 
 @app.route('/home/medication-options/deletePatientMedication/<int:id>', methods=['POST', 'GET'])    #Finish
+def deletePatientMed():
+    pass
 
 # Navigation Options for each button ==> Opens each table
 @app.route('/home/patient-options', methods=['POST', 'GET'])
