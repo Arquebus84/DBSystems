@@ -14,7 +14,7 @@
                     <td class="tableCellFormat">{{ r[1] }}</td>
                     <td class="tableCellFormat">{{ r[2] }} {{ r[3] }}</td>
                     <td class="tableCellFormat">
-                        <a href="">Delete</a>
+                        <a href="{{ url_for('deleteRoom', id=r[0]) }}">Delete</a>
                         <a href="">Update</a>
                     </td>
                 </tr>

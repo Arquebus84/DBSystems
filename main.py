@@ -224,7 +224,7 @@ def newMedicationRow():
     medications = cursor.fetchall()
     return render_template('medication.html', medications=medications)
 
-@app.route('/home/medication-options/addPatientMedication', methods=['POST', 'GET']) #Finish
+@app.route('/home/medication-options/addPatientMedication', methods=['POST', 'GET'])
 def newPatientMed():
     if(request.method == 'POST'):
         patient = request.form['patient']
@@ -290,9 +290,17 @@ def deleteFamily(id):
     except:
         return 'failed to delete'
     return redirect('/home')
-@app.route('/home/patient-options/deleteRoom/<int:id>', methods=['POST', 'GET'])    #Finish
+@app.route('/home/patient-options/deleteRoom/<int:id>', methods=['POST', 'GET'])
 def deleteRoom(id):
-    pass
+    try:
+        query1 = 'DELETE FROM patient_room WHERE patientRoomID = %s'
+        query2 = 'ALTER TABLE patient_room AUTO_INCREMENT = 1'
+        values = [id]
+        cursor.execute(query1, values)
+        cursor.execute(query2)
+        db.commit()
+    except:
+        return 'failed to delete'
 
 @app.route('/home/faculty-options/deleteFaculty/<int:id>', methods=['POST', 'GET'])
 def deleteFaculty(id):
@@ -322,11 +330,19 @@ def deleteFacultyType(id):
         return "failed to delete"
     
     return redirect('/home')
-@app.route('/home/faculty-options/deleteAssignment/<int:id>', methods=['POST', 'GET'])  #Finish
+@app.route('/home/faculty-options/deleteAssignment/<int:id>', methods=['POST', 'GET']) 
 def deleteAssign(id):
-    pass
+    try:
+        query1 = 'DELETE FROM assigned_room WHERE assignedRoomID = %s'
+        query2 = 'ALTER TABLE assigned_room AUTO_INCREMENT = 1'
+        values=[id]
+        cursor.execute(query1,values)
+        cursor.execute(query2)
+        db.commit()
+    except:
+        return 'failed to delete'
 
-@app.route('/home/medication-options/deleteMedication/<int:id>', methods=['POST', 'GET'])   #Finish
+@app.route('/home/medication-options/deleteMedication/<int:id>', methods=['POST', 'GET']) 
 def deleteMedication(id):
     # Delete specific row and update the autoincrement to the highest value
     try:
@@ -341,9 +357,17 @@ def deleteMedication(id):
     
     return redirect('/home')
 
-@app.route('/home/medication-options/deletePatientMedication/<int:id>', methods=['POST', 'GET'])    #Finish
-def deletePatientMed():
-    pass
+@app.route('/home/medication-options/deletePatientMedication/<int:id>', methods=['POST', 'GET'])
+def deletePatientMed(id):
+    try:
+        query1 = 'DELETE FROM patient_med WHERE patientMedID = %s'
+        query2 = 'ALTER TABLE patient_med AUTO_INCREMENT = 1'
+        values = [id]
+        cursor.execute(query1, values)
+        cursor.execute(query2)
+        db.commit()
+    except:
+        return 'failed to delete'
 
 # Navigation Options for each button ==> Opens each table
 # region options
