@@ -37,30 +37,67 @@ def check_connection():
         # db.commit()
         # endregion
         
+        #region second test
         numberID = None
-        query0 = 'SELECT numberID from phone_number'
-        query1 = 'SELECT numberID from phone_number WHERE phone_number.phoneNumber = %s'
-        value = ['912-210-4218']
+        query1 = 'SELECT numberID, phoneNumber FROM phone_number WHERE phone_number.phoneNumber = %s'
+        value = ['326-123-9876']
         cursor.execute(query1, value)
         # cursor.fetchall()
         for x in cursor:
             numberID = str(x[0])
+        print(numberID)
         if (numberID is None):
             cursor.fetchall()
+            print('recalculating')
             query2 = 'INSERT IGNORE INTO phone_number (phoneNumber) VALUES (%s)'
             cursor.execute(query2, value)
-            for n in cursor:
-                numberID = str(n[0])
-        cursor.fetchall()
-        # print(numberID)
-        query3 = 'INSERT IGNORE INTO trusted_family (familyLastName, phoneNumberID) VALUES (%s, %s)'
-        value2 = ['Ventura', numberID]
-        cursor.execute(query3, value2)
-        cursor.fetchall()
-        cursor.execute('SELECT familyLastName, phoneNumberID from trusted_family')
-        for x in cursor:
-            print(x)
+            cursor.fetchall()
+            cursor.execute(query1, value)
+            for c in cursor:
+                numberID = str(c[0])
+                print(c)
+            print(numberID)
+        # cursor.fetchall()
+        # # print(numberID)
+        # query3 = 'INSERT IGNORE INTO trusted_family (familyLastName, phoneNumberID) VALUES (%s, %s)'
+        # value2 = ['Ventura', numberID]
+        # cursor.execute(query3, value2)
+        # cursor.fetchall()
+        # cursor.execute('SELECT familyLastName, phoneNumberID from trusted_family')
+        # for x in cursor:
+        #     print(x)
         db.commit()
+        #endregion
+
+        #region Search for assigned_room
+        # values = [5]
+        # query0 = 'SELECT patientRoomID FROM patient_room WHERE patientID = %s'
+        # cursor.execute(query0, values)
+        # roomID = None
+        # for x in cursor:
+        #     roomID = x[0]
+        # print(roomID)
+        # if(roomID != None):
+        #     query1 = 'DELETE FROM assigned_room WHERE patientRoomID = %s'
+        #     value2 = [roomID]
+        #     cursor.execute(query1, value2)
+        #     cursor.fetchall()
+        #     query2 = 'DELETE FROM patient_room WHERE patientRoomID = %s'
+        #     cursor.execute(query2, value2)
+        #     cursor.fetchall()
+        # query3 = 'DELETE FROM payment_summary WHERE patientID = %s'
+        # cursor.execute(query3, values)
+        # cursor.fetchall()
+        # query4 = 'DELETE FROM patient_med WHERE patientID = %s'
+        # cursor.execute(query4, values)
+        # cursor.fetchall()
+        # query5 = 'DELETE FROM patient WHERE patientID = %s'
+        # query6 = 'ALTER TABLE patient AUTO_INCREMENT = 1'
+        # cursor.execute(query5, values)
+        # cursor.fetchall()
+        # cursor.execute(query6)
+        # db.commit()
+        #endregion
 
         return 'Valid'
     except mysql.connector.Error as e:

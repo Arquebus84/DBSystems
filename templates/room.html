@@ -5,14 +5,14 @@
     <table class="tableFormat">
         <tr>
             <th class="tableCellFormat">roomID</th><th class="tableCellFormat">Room Number</th>
-            <th class="tableCellFormat">Patient First Name</th><th class="tableCellFormat">Actions</th>
+            <th class="tableCellFormat">Patient Name</th><th class="tableCellFormat">Actions</th>
         </tr>
         <tr>
             {% for r in room %}
                 <tr>
                     <td class="tableCellFormat">{{ r[0] }}</td>
                     <td class="tableCellFormat">{{ r[1] }}</td>
-                    <td class="tableCellFormat">{{ r[2] }}</td>
+                    <td class="tableCellFormat">{{ r[2] }} {{ r[3] }}</td>
                     <td class="tableCellFormat">
                         <a href="">Delete</a>
                         <a href="">Update</a>
@@ -25,8 +25,12 @@
 <div>
     <div class= "divForm">
         <form action="/home/patient-options/addRoom", method="POST", class="tableForm">
-            <input type="select", id="'content" name="roomID", class="tableInput">
-            <input type="select", id="'content" name="patientID", class="tableInput">
+            <input type="select", id="'content" name="roomNumber", class="tableInput">
+            <select id="'content" name="patientID", class="tableInput">
+                {% for p in patient %}
+                    <option value="{{ p[0] }}">{{ p[1] }} {{ p[2] }}</option>
+                {% endfor %}
+            </select>
             <input type="submit", name="addRow">
         </form>
     </div>

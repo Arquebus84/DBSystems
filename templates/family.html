@@ -13,7 +13,7 @@
                 <td class="tableCellFormat">{{ fam[1] }}</td>
                 <td class="tableCellFormat">{{ fam[2] }}</td>
                 <td class="tableCellFormat">
-                    <a href="">Delete</a>
+                    <a href="{{ url_for('deleteFamily', id=fam[0]) }}">Delete</a>
                     <a href="">Update</a>
                 </td>
             </tr>
@@ -25,7 +25,7 @@
     <div class= "divForm">
         <form action="/home/patient-options/addFamily", method="POST", class="tableForm">
             <input type="select", id="'content" name="familyLastName", class="tableInput">
-            <input type="select"m id="'content" name="phoneNumberID", class="tableInput">
+            <input type="select", id="'content" name="phoneNumber", class="tableInput">
             <input type="submit", name="addRow">
         </form>
     </div>

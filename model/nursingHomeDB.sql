@@ -81,7 +81,7 @@ CREATE TABLE `patient` (
   `lastName` varchar(20) DEFAULT NULL,
   `patientPriority` INTEGER DEFAULT NULL,
   `conditionDesc` varchar(100) DEFAULT NULL,
-  `familyID` INTEGER NOT NULL,
+  `familyID` INTEGER DEFAULT NULL,
   CONSTRAINT `patient_ibfk_1` FOREIGN KEY (`familyID`) REFERENCES `trusted_family` (`familyID`),
   CONSTRAINT `patient_chk_1` CHECK (((`patientPriority` > 0) AND (`patientPriority` <= 5)))
 );
