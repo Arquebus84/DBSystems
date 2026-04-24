@@ -129,7 +129,7 @@ def addMedicationRow(medicationType, price, tax):
     cursor.execute(query3, values2)
     db.commit()
 def addPatientMedRow(patientID, medicationID):
-    query = 'INSERT INTO patient_med VALUES (%s, %s)'
+    query = 'INSERT INTO patient_med (patientID, medicationID) VALUES (%s, %s)'
     values = [patientID, medicationID]
     cursor.execute(query, values)
     db.commit()
@@ -227,7 +227,16 @@ def newMedicationRow():
 @app.route('/home/medication-options/addPatientMedication', methods=['POST', 'GET']) #Finish
 def newPatientMed():
     if(request.method == 'POST'):
-        pass
+        patient = request.form['patient']
+        medication = request.form['medication']
+        addPatientMedRow(patient, medication)
+    cursor.execute(getPatientMedTable())
+    patient_medications = cursor.fetchall()
+    cursor.execute(getPatientTable())
+    patients = cursor.fetchall()
+    cursor.execute(getMedicationTable())
+    medications = cursor.fetchall()
+    return render_template('patientMed.html', patient_medications=patient_medications, patients=patients, medications=medications)
 
 # Deleting rows
 @app.route('/home/patient-options/deletePatient/<int:id>', methods=['POST', 'GET']) # Possibly modify
@@ -266,7 +275,7 @@ def deletePatient(id):
     except:
         return "failed to delete"
     return redirect('/home')
-@app.route('/home/patient-options/deleteFamily/<int:id>', methods=['POST', 'GET'])  #Finish
+@app.route('/home/patient-options/deleteFamily/<int:id>', methods=['POST', 'GET'])
 def deleteFamily(id):
     #Delete patients by id if trusted_family is deleted
     try:

@@ -3,7 +3,8 @@
 {% block patientMed %}
 <div class="tableDiv">
     <table class="tableFormat">
-        <th class="tableCellFormat">PatientMedsID</th> <th class="tableCellFormat">Patient First Name</th><th class="tableCellFormat">Patient Last Name</th><th class="tableCellFormat">Medication</th><th class="tableCellFormat">Actions</th>
+        <th class="tableCellFormat">PatientMedsID</th> <th class="tableCellFormat">Patient First Name</th>
+        <th class="tableCellFormat">Patient Last Name</th><th class="tableCellFormat">Medication</th><th class="tableCellFormat">Actions</th>
         <tr>
             {% for patientMed in patient_medications %}
                 <tr>
@@ -22,13 +23,13 @@
 </div>
 <div>
     <div class= "divForm">
-        <form action="/home/medication-patient/addPatientMedication", method="POST", class="tableForm">
-            <select id="'content" name="Patient", class="tableInput">
+        <form action="/home/medication-options/addPatientMedication", method="POST", class="tableForm">
+            <select id="'content" name="patient", class="tableInput">
                 {% for p in patients %}
                     <option value="{{ p[0] }}">{{ p[1] }} {{ p[2] }}</option>
                 {% endfor %}
             </select>
-            <select id="'content" name="Medication", class="tableInput">
+            <select id="'content" name="medication", class="tableInput">
                 {% for m in medications %}
                     <option value="{{ m[0] }}">{{ m[1] }}</option>
                 {% endfor %}
