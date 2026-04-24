@@ -13,7 +13,7 @@
                     <td class="tableCellFormat">{{ patientMed[2] }}</td>
                     <td class="tableCellFormat">{{ patientMed[3] }}</td>
                     <td class="tableCellFormat">
-                        <a href="">Delete</a>
+                        <a href="{{ url_for('deletePatientMedication', id=patientMed[0]) }}">Delete</a>
                         <a href="">Update</a>
                     </td>
                 </tr>
