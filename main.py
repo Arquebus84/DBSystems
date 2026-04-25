@@ -31,9 +31,13 @@ def getRoomTable():
     return 'SELECT r.patientRoomID, r.patientRoomNumber AS roomNumber, p.firstName AS firstName, p.lastName AS lastName ' \
     'FROM patient_room r JOIN patient p WHERE r.patientID = p.patientID'
 def getPaymentTable():
-    return 'SELECT ROUND(sum(sys.price * sys.tax * 0.01 + sys.price), 2) AS netPayment, p.firstName AS firstName, p.lastName AS lastName ' \
-    'FROM payment_summary psum JOIN patient p JOIN payment_system sys ' \
-    'WHERE p.patientID = psum.patientID AND psum.paymentID = sys.paymentID GROUP BY p.firstName, p.lastName'
+    return 'SELECT ROUND(sum(sys.price * sys.tax * 0.01 + sys.price), 2) AS netPayment, p.firstName AS firstName, p.lastName AS lastName '\
+        'FROM payment_summary psum '\
+        'JOIN patient p '\
+        'JOIN payment_system sys '\
+        'JOIN patient_med pmed ' \
+        'WHERE psum.paymentID = sys.paymentID AND pmed.patientID = p.patientID '\
+        'GROUP BY p.firstName, p.lastName'
 
 def getFacultyTable():
     return 'SELECT f.facultyID, f.facultyLastName, ft.facultyType ' \
