@@ -197,11 +197,11 @@ INSERT INTO trusted_family (familyLastName, phoneNumberID)
 
 -- Just fucking kill me
 INSERT INTO patient (firstName, lastName, patientPriority, conditionDesc, familyID) 
-  VALUES ("Ronald", "Grace", 5, "Hernia", 2),
-  ("Todd", "Howard", 5, "Migraine", 3),
-  ("Will", "Bowers", 3, "Dimentia", 1),
-  ("Bill", "Shatner", 1, "Dimentia", 4);
-  ("Lorenzo", "Ventura", 5, "Ass Infection");
+  VALUES ("Ronald", "Grace", 5, "Hernia", 3),
+  ("Todd", "Howard", 5, "Migraine", 5),
+  ("Will", "Bowers", 3, "Dimentia", 2),
+  ("Bill", "Shatner", 1, "Dimentia", 4),
+  ("Lorenzo", "Ventura", 5, "Ass Infection", 1);
 
 -- PatientRoom to Patient is 1:1
 INSERT INTO patient_room (patientRoomNumber, patientID) 

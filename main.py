@@ -74,6 +74,8 @@ def addMedicationRow(medicationType, price, tax):
         cursor.fetchall()
         query2 = 'INSERT IGNORE INTO payment_system (price, tax) VALUES (%s, %s)'
         cursor.execute(query2, values1)
+        cursor.fetchall()
+        cursor.execute(query1, values1)
         for n in cursor:
             ID = str(n[0])
     cursor.fetchall()
@@ -330,7 +332,7 @@ def patient_options():
     if(pressed == 'patient-table'):
         cursor.execute(getTable.getPatientTable())
         patients = cursor.fetchall()
-        cursor.execute(getTable.getFamilyTable())
+        cursor.execute(getTable.getAllFamilyTable())
         family = cursor.fetchall()
         return render_template('patient.html', patients=patients, family=family)
     elif(pressed == 'patient-family'):
