@@ -2,8 +2,8 @@ def getPatientTable():
     return 'SELECT p.patientID AS ID, p.firstName AS firstName, p.lastName AS lastName, p.patientPriority AS priority, ' \
     'p.conditionDesc AS conditionDesc, tf.familyLastName AS familyContact ' \
     'FROM patient p JOIN trusted_family tf ' \
-    'ON p.familyID = tf.familyID \
-    ORDER BY p.patientID'
+    'WHERE p.familyID = tf.familyID ' \
+    'ORDER BY p.patientID'
 
 def getFamilyTable():
     return 'SELECT tf.familyID, tf.familyLastName AS familyName, pn.phoneNumber AS phoneNumber ' \
@@ -16,7 +16,7 @@ def getRoomTable():
     return 'SELECT r.patientRoomID, r.patientRoomNumber AS roomNumber, p.firstName AS firstName, p.lastName AS lastName ' \
     'FROM patient_room r JOIN patient p WHERE r.patientID = p.patientID'
 
-def getPaymentTable():      #Fix Calculation Issue
+def getPaymentTable(): 
     return 'SELECT ROUND(sum(sys.price * sys.tax * 0.01 + sys.price), 2) AS netPayment, p.firstName AS firstName, p.lastName AS lastName '\
         'FROM payment_system sys '\
         'JOIN patient p '\
@@ -43,7 +43,9 @@ def getAssignTable():
     'where ar.patientRoomID = pr.patientRoomID AND ar.facultyID = f.facultyID AND pr.patientID = p.patientID'
 
 def getMedicationTable():
-    return 'SELECT m.medicationID, m.medicationType, p.price, p.tax FROM medication m JOIN payment_system p WHERE p.paymentID = m.paymentID'
+    return 'SELECT m.medicationID, m.medicationType, p.price, p.tax ' \
+    'FROM medication m ' \
+    'JOIN payment_system p WHERE p.paymentID = m.paymentID'
 
 def getPatientMedTable():
     return 'SELECT pmed.patientMedID, p.firstName AS firstName, p.lastName AS lastName, med.medicationType AS medication ' \
