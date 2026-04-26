@@ -1,68 +1,17 @@
 from flask import Flask ,render_template, url_for, request, redirect
+from model.database import dbConnect
 
-import mysql.connector
-from flask import Flask
+import controller.getControls.getTables
 
+# Connect with Flask
 app = Flask(__name__)
 
-try:
-    db = mysql.connector.connect(
-        host='localhost',
-        user='root',
-        password='ithertzwhenIP#1984',
-        database='nursingHomeDB'
-    )
-    cursor = db.cursor()
-except mysql.connector.Error as e:
-    medications = ["#"]
-    print(e)
-    
-#region Get tables for each button event
-def getPatientTable():
-    return 'SELECT p.patientID AS ID, p.firstName AS firstName, p.lastName AS lastName, p.patientPriority AS priority, ' \
-    'p.conditionDesc AS conditionDesc, tf.familyLastName AS familyContact ' \
-    'FROM patient p JOIN trusted_family tf ' \
-    'ON p.familyID = tf.familyID \
-    ORDER BY p.patientID'
-def getFamilyTable():
-    return 'SELECT tf.familyID, tf.familyLastName AS familyName, pn.phoneNumber AS phoneNumber ' \
-    'FROM trusted_family tf JOIN phone_number pn WHERE tf.phoneNumberID = pn.numberID'
-def getRoomTable():
-    return 'SELECT r.patientRoomID, r.patientRoomNumber AS roomNumber, p.firstName AS firstName, p.lastName AS lastName ' \
-    'FROM patient_room r JOIN patient p WHERE r.patientID = p.patientID'
-def getPaymentTable():
-    return 'SELECT ROUND(sum(sys.price * sys.tax * 0.01 + sys.price), 2) AS netPayment, p.firstName AS firstName, p.lastName AS lastName '\
-        'FROM payment_summary psum '\
-        'JOIN patient p '\
-        'JOIN payment_system sys '\
-        'JOIN patient_med pmed ' \
-        'WHERE psum.paymentID = sys.paymentID AND pmed.patientID = p.patientID '\
-        'GROUP BY p.firstName, p.lastName'
+# Connect to DB
+db = dbConnect()
+cursor = db.cursor()
 
-def getFacultyTable():
-    return 'SELECT f.facultyID, f.facultyLastName, ft.facultyType ' \
-    'FROM faculty f JOIN faculty_type ft ON f.facultyTypeID = ft.facultyTypeID'
-def getFacultyTypeTable():
-    return 'SELECT ft.facultyTypeID, ft.facultyType FROM faculty_type ft'
-def getAssignTable():
-    return 'SELECT ar.assignedRoomID, f.facultyLastName AS facultyName, p.firstName AS firstName, p.lastName AS lastName, pr.patientRoomNumber AS roomNum, ' \
-    'case ' \
-    'when (pr.patientRoomNumber >= 3000) then ifnull(ar.floorNumber, 3) ' \
-    'when (pr.patientRoomNumber >= 2000) then ifnull(ar.floorNumber, 2) ' \
-    'else ifnull(ar.floorNumber, 1) ' \
-    'end AS FloorNumber from assigned_room ar ' \
-    'join patient_room pr join patient p join faculty f ' \
-    'where ar.patientRoomID = pr.patientRoomID AND ar.facultyID = f.facultyID AND pr.patientID = p.patientID'
-
-def getMedicationTable():
-    return 'SELECT m.medicationID, m.medicationType, p.price, p.tax FROM medication m JOIN payment_system p WHERE p.paymentID = m.paymentID'
-def getPatientMedTable():
-    return 'SELECT pmed.patientMedID, p.firstName AS firstName, p.lastName AS lastName, med.medicationType AS medication ' \
-            'FROM patient_med pmed '\
-            'JOIN medication med '\
-            'JOIN patient p '\
-            'WHERE pmed.patientID = p.patientID AND pmed.medicationID = med.medicationID'
-#endregion
+# Get table commands
+getTable = controller.getControls.getTables
 
 #region Add tuples
 def addPatientRow(firstName, lastName, priority, condition, familyID):
@@ -155,9 +104,9 @@ def newPatientRow():
         patientCondition=request.form['condition']
         patientFamily=request.form['familyID']
         addPatientRow(patientFName, patientLName, patientPriority, patientCondition, patientFamily)
-    cursor.execute(getPatientTable())
+    cursor.execute(getTable.getPatientTable())
     patients = cursor.fetchall()
-    cursor.execute(getFamilyTable())
+    cursor.execute(getTable.getAllFamilyTable())
     family = cursor.fetchall()
     return render_template('patient.html', patients=patients, family=family)
 
@@ -167,7 +116,7 @@ def newFamilyRow():
         familyLastName = request.form['familyLastName']
         phoneNumber = request.form['phoneNumber']
         addFamilyRow(familyLastName, phoneNumber)
-    cursor.execute(getFamilyTable())
+    cursor.execute(getTable.getFamilyTable())
     family=cursor.fetchall()
     return render_template('family.html', family=family)
 @app.route('/home/patient-options/addRoom', methods=['POST', 'GET'])
@@ -176,9 +125,9 @@ def newRoomRow():
         roomNumber = request.form['roomNumber']
         patientID = request.form['patientID']
         addRoomRow(roomNumber, patientID)
-    cursor.execute(getRoomTable())
+    cursor.execute(getTable.getRoomTable())
     room = cursor.fetchall()
-    cursor.execute(getPatientTable())
+    cursor.execute(getTable.getPatientTable())
     patient = cursor.fetchall()
     return render_template('room.html', room=room, patient=patient)
 
@@ -188,9 +137,9 @@ def newFacultyRow():
         facultyLastName = request.form['facultyLastName']
         facultyTypeID = request.form['facultyTypeID']
         addFacultyRow(facultyLastName, facultyTypeID)
-    cursor.execute(getFacultyTable())
+    cursor.execute(getTable.getFacultyTable())
     faculty = cursor.fetchall()
-    cursor.execute(getFacultyTypeTable())
+    cursor.execute(getTable.getFacultyTypeTable())
     facultyType = cursor.fetchall()
     return render_template('faculty.html', faculty=faculty, facultyType=facultyType)
 
@@ -199,7 +148,7 @@ def newFacultyTypeRow():
     if(request.method == 'POST'):
         facultyType=request.form['facultyType']
         addFacultyTypeRow(facultyType)
-    cursor.execute(getFacultyTypeTable())
+    cursor.execute(getTable.getFacultyTypeTable())
     facultyType = cursor.fetchall()
     return render_template('facultyType.html', facultyType=facultyType)
 
@@ -209,11 +158,11 @@ def newAssignmentRow():
         patientRoomID = request.form['patientRoomID']
         facultyID = request.form['facultyID']
         addAssignmentRow(patientRoomID, facultyID)
-    cursor.execute(getAssignTable())
+    cursor.execute(getTable.getAssignTable())
     assign = cursor.fetchall()
-    cursor.execute(getRoomTable())
+    cursor.execute(getTable.getRoomTable())
     room = cursor.fetchall()
-    cursor.execute(getFacultyTable())
+    cursor.execute(getTable.getFacultyTable())
     faculty = cursor.fetchall()
     return render_template('assignment.html', assign=assign, room=room, faculty=faculty)
 
@@ -224,7 +173,7 @@ def newMedicationRow():
         price = request.form['price']
         tax = request.form['tax']
         addMedicationRow(medicationType, price, tax)
-    cursor.execute(getMedicationTable())
+    cursor.execute(getTable.getMedicationTable())
     medications = cursor.fetchall()
     return render_template('medication.html', medications=medications)
 
@@ -234,11 +183,11 @@ def newPatientMed():
         patient = request.form['patient']
         medication = request.form['medication']
         addPatientMedRow(patient, medication)
-    cursor.execute(getPatientMedTable())
+    cursor.execute(getTable.getPatientMedTable())
     patient_medications = cursor.fetchall()
-    cursor.execute(getPatientTable())
+    cursor.execute(getTable.getPatientTable())
     patients = cursor.fetchall()
-    cursor.execute(getMedicationTable())
+    cursor.execute(getTable.getMedicationTable())
     medications = cursor.fetchall()
     return render_template('patientMed.html', patient_medications=patient_medications, patients=patients, medications=medications)
 
@@ -379,23 +328,23 @@ def deletePatientMed(id):
 def patient_options():
     pressed = request.form.get('bt')
     if(pressed == 'patient-table'):
-        cursor.execute(getPatientTable())
+        cursor.execute(getTable.getPatientTable())
         patients = cursor.fetchall()
-        cursor.execute(getFamilyTable())
+        cursor.execute(getTable.getFamilyTable())
         family = cursor.fetchall()
         return render_template('patient.html', patients=patients, family=family)
     elif(pressed == 'patient-family'):
-        cursor.execute(getFamilyTable())
+        cursor.execute(getTable.getFamilyTable())
         family = cursor.fetchall()
         return render_template('family.html', family=family)
     elif(pressed == 'patient-rooms'):
-        cursor.execute(getRoomTable())
+        cursor.execute(getTable.getRoomTable())
         room = cursor.fetchall()
-        cursor.execute(getPatientTable())
+        cursor.execute(getTable.getPatientTable())
         patient = cursor.fetchall()
         return render_template('room.html', room=room, patient=patient)
     elif(pressed == 'patient-payment'):
-        cursor.execute(getPaymentTable())
+        cursor.execute(getTable.getPaymentTable())
         summary = cursor.fetchall()
         return render_template('summary.html', summary=summary)
     else:
@@ -405,21 +354,21 @@ def patient_options():
 def faculty_options():
     pressed = request.form.get('bt')
     if(pressed == 'faculty-table'):
-        cursor.execute(getFacultyTable())
+        cursor.execute(getTable.getFacultyTable())
         faculty = cursor.fetchall()
-        cursor.execute(getFacultyTypeTable())
+        cursor.execute(getTable.getFacultyTypeTable())
         facultyType = cursor.fetchall()
         return render_template('faculty.html', faculty=faculty, facultyType=facultyType)
     elif(pressed == 'faculty-type-table'):
-        cursor.execute(getFacultyTypeTable())
+        cursor.execute(getTable.getFacultyTypeTable())
         facultyType = cursor.fetchall()
         return render_template('facultyType.html', facultyType=facultyType)
     elif(pressed == 'faculty-assign'):
-        cursor.execute(getAssignTable())
+        cursor.execute(getTable.getAssignTable())
         assign = cursor.fetchall()
-        cursor.execute(getRoomTable())
+        cursor.execute(getTable.getRoomTable())
         room = cursor.fetchall()
-        cursor.execute(getFacultyTable())
+        cursor.execute(getTable.getFacultyTable())
         faculty = cursor.fetchall()
         return render_template('assignment.html', assign=assign, room=room, faculty=faculty)
     else:
@@ -429,16 +378,16 @@ def faculty_options():
 def medication_options():
     pressed = request.form.get('bt')
     if(pressed == 'medication-table'):
-        cursor.execute(getMedicationTable())
+        cursor.execute(getTable.getMedicationTable())
         medications = cursor.fetchall()
         return render_template('medication.html', medications=medications)
     
     elif(pressed == 'medication-patient'):
-        cursor.execute(getPatientMedTable())
+        cursor.execute(getTable.getPatientMedTable())
         patient_medications = cursor.fetchall()
-        cursor.execute(getPatientTable())
+        cursor.execute(getTable.getPatientTable())
         patients = cursor.fetchall()
-        cursor.execute(getMedicationTable())
+        cursor.execute(getTable.getMedicationTable())
         medications = cursor.fetchall()
         return render_template('patientMed.html', patient_medications=patient_medications, patients=patients, medications=medications)
     

@@ -6,10 +6,23 @@ drop database nursingHomeDB;
 create database nursingHomeDB;
 use nursingHomeDB;
 
+DROP TABLE IF EXISTS `faculty_type`;
+DROP TABLE IF EXISTS `payment_system`;
+DROP TABLE IF EXISTS `medication`;
+DROP TABLE IF EXISTS `phone_number`;
+DROP TABLE IF EXISTS `faculty`;
+DROP TABLE IF EXISTS `trusted_family`;
+DROP TABLE IF EXISTS `patient`;
+DROP TABLE IF EXISTS `patient_room`;
+DROP TABLE IF EXISTS `patient_med`;
+DROP TABLE IF EXISTS `payment_summary`;
+DROP TABLE IF EXISTS `assigned_room`;
+DROP TABLE IF EXISTS `works_with`;
+
+
 --
 -- Table structure for table `faculty_type`
 --
-DROP TABLE IF EXISTS `faculty_type`;
 CREATE TABLE `faculty_type` (
   `facultyTypeID` INTEGER NOT NULL UNIQUE AUTO_INCREMENT PRIMARY KEY,
   `facultyType` varchar(12) DEFAULT NULL
@@ -18,40 +31,33 @@ CREATE TABLE `faculty_type` (
 --
 -- Table structure for table `payment_system`
 --
-DROP TABLE IF EXISTS `payment_system`;
 CREATE TABLE `payment_system` (
-  `paymentID` INTEGER NOT NULL UNIQUE AUTO_INCREMENT,
+  `paymentID` INTEGER NOT NULL UNIQUE AUTO_INCREMENT PRIMARY KEY,
   `price` decimal(5, 2) NOT NULL,
-  `tax` decimal(5, 2) NOT NULL,
-  PRIMARY KEY (`paymentID`)
+  `tax` decimal(5, 2) NOT NULL
 );
 
 --
 -- Table structure for table `medication`
 --
-DROP TABLE IF EXISTS `medication`;
 CREATE TABLE `medication` (
-  `medicationID` INTEGER NOT NULL UNIQUE AUTO_INCREMENT,
+  `medicationID` INTEGER NOT NULL UNIQUE AUTO_INCREMENT PRIMARY KEY,
   `medicationType` varchar(20) DEFAULT NULL,
   `paymentID` INTEGER NOT NULL,
-  PRIMARY KEY (`medicationID`),
   CONSTRAINT `medication_idfk_1` FOREIGN KEY (`paymentID`) REFERENCES `payment_system` (`paymentID`)
 );
 
 --
 -- Table structure for table `phone_number`
 --
-DROP TABLE IF EXISTS `phone_number`;
 CREATE TABLE `phone_number` (
-  `numberID` INTEGER NOT NULL UNIQUE AUTO_INCREMENT,
-  `phoneNumber` varchar(12) DEFAULT NULL,
-  PRIMARY KEY (`numberID`)
+  `numberID` INTEGER NOT NULL UNIQUE AUTO_INCREMENT PRIMARY KEY,
+  `phoneNumber` varchar(12) DEFAULT NULL
 );
 
 --
 -- Table structure for table `faculty`
 --
-DROP TABLE IF EXISTS `faculty`;
 CREATE TABLE `faculty` (
   `facultyID` INTEGER NOT NULL UNIQUE AUTO_INCREMENT PRIMARY KEY,
   `facultyLastName` varchar(20) DEFAULT NULL,
@@ -62,19 +68,16 @@ CREATE TABLE `faculty` (
 --
 -- Table structure for table `trusted_family`
 --
-DROP TABLE IF EXISTS `trusted_family`;
 CREATE TABLE `trusted_family` (
-  `familyID` INTEGER NOT NULL UNIQUE AUTO_INCREMENT,
+  `familyID` INTEGER NOT NULL UNIQUE AUTO_INCREMENT PRIMARY KEY,
   `familyLastName` varchar(20) DEFAULT NULL,
-  `phoneNumberID` INTEGER NOT NULL,
-  PRIMARY KEY (`familyID`),
+  `phoneNumberID` INTEGER DEFAULT NULL,
   CONSTRAINT `trusted_family_ibfk_1` FOREIGN KEY (`phoneNumberID`) REFERENCES `phone_number` (`numberID`)
 );
 
 --
 -- Table structure for table `patient`
 --
-DROP TABLE IF EXISTS `patient`;
 CREATE TABLE `patient` (
   `patientID` INTEGER NOT NULL UNIQUE AUTO_INCREMENT PRIMARY KEY,
   `firstName` varchar(20) DEFAULT NULL,
@@ -89,7 +92,6 @@ CREATE TABLE `patient` (
 --
 -- Table structure for table `patient_room`
 --
-DROP TABLE IF EXISTS `patient_room`;
 CREATE TABLE `patient_room` (
   `patientRoomID` INTEGER NOT NULL UNIQUE AUTO_INCREMENT,
   `patientRoomNumber` INTEGER NOT NULL,
@@ -102,7 +104,6 @@ CREATE TABLE `patient_room` (
 --
 -- Table structure for table `patient_med`
 --
-DROP TABLE IF EXISTS `patient_med`;
 CREATE TABLE `patient_med` (
   `patientMedID` INTEGER NOT NULL UNIQUE AUTO_INCREMENT,
   `patientID` INTEGER NOT NULL,
@@ -115,13 +116,11 @@ CREATE TABLE `patient_med` (
 --
 -- Table structure for table `payment_summary`
 --
-DROP TABLE IF EXISTS `payment_summary`;
 CREATE TABLE `payment_summary` (
-  `paymentSumID` INTEGER NOT NULL UNIQUE AUTO_INCREMENT,
+  `paymentSumID` INTEGER NOT NULL UNIQUE AUTO_INCREMENT PRIMARY KEY,
   `netPayment` decimal(5, 2) DEFAULT NULL,
   `patientID` INTEGER NOT NULL,
   `paymentID` INTEGER NOT NULL,
-  PRIMARY KEY (`paymentSumID`),
   CONSTRAINT `payment_summary_ibfk_2` FOREIGN KEY (`patientID`) REFERENCES `patient` (`patientID`),
   CONSTRAINT `payment_summary_ibfk_1` FOREIGN KEY (`paymentID`) REFERENCES `payment_system` (`paymentID`)
 );
@@ -129,13 +128,11 @@ CREATE TABLE `payment_summary` (
 --
 -- Table structure for table `assigned_room`
 --
-DROP TABLE IF EXISTS `assigned_room`;
 CREATE TABLE `assigned_room` (
-  `assignedRoomID` INTEGER NOT NULL UNIQUE AUTO_INCREMENT,
+  `assignedRoomID` INTEGER NOT NULL UNIQUE AUTO_INCREMENT PRIMARY KEY,
   `patientRoomID` INTEGER NOT NULL UNIQUE,
   `facultyID` INTEGER NOT NULL,
   `floorNumber` INTEGER,
-  PRIMARY KEY (`assignedRoomID`),
   CONSTRAINT `assigned_room_ibfk_1` FOREIGN KEY (`patientRoomID`) REFERENCES `patient_room` (`patientroomID`),
   CONSTRAINT `assigned_room_chk_1` CHECK (((`floorNumber` > 0) and (`floorNumber` < 4)))
 );
@@ -143,7 +140,6 @@ CREATE TABLE `assigned_room` (
 --
 -- Table structure for table `works_with`
 --
-DROP TABLE IF EXISTS `works_with`;
 CREATE TABLE `works_with` (
   `familyID` INTEGER NOT NULL,
   `facultyID` INTEGER NOT NULL,
@@ -159,66 +155,80 @@ CREATE TABLE `works_with` (
 -- Any attribute listed in parenthesis that contains "ID" in its name should be a selection box in the home.ejs
 
 -- Inserting into faculty_type is for the staff included in a nursing home, so only one insert option should be available
-INSERT INTO faculty_type (facultyType) VALUES ('Doctor');
-INSERT INTO faculty_type (facultyType) VALUES ('Nurse');
+INSERT INTO faculty_type (facultyType) 
+  VALUES ('Doctor'), 
+      ('Nurse');
 
 -- Two insertions: price and tax, index will be auto
-INSERT INTO payment_system (price, tax) VALUES (8.51, 2.7);
-INSERT INTO payment_system (price, tax) VALUES (10.50, 1.0);
-INSERT INTO payment_system (price, tax) VALUES (4.26, 3.8);
-INSERT INTO payment_system (price, tax) VALUES (18.75, 4.2);
+INSERT INTO payment_system (price, tax) 
+  VALUES (8.51, 2.7), 
+  (10.50, 1.0), 
+  (4.26, 3.8), 
+  (18.75, 4.2);
 
 -- Only a new medication should be written, a selection box should be used for the paymentID
 --    Many medications can have similar prices
-INSERT INTO medication (medicationType, paymentID) VALUES ("Advil", 1);
-INSERT INTO medication (medicationType, paymentID) VALUES ("Metformin", 2);
+INSERT INTO medication (medicationType, paymentID) 
+  VALUES ("Advil", 1), 
+  ("Metformin", 2);
 
 -- The employees should only insert the last names... I honestly do not know if the staff a real nursing home know each other's first name
 --  It's us... and definitely not because I'm uncreative
-INSERT INTO faculty (facultyLastName, facultyTypeID) VALUES ('Roe', 2);
-INSERT INTO faculty (facultyLastName, facultyTypeID) VALUES ('Oropesa', 2);
-INSERT INTO faculty (facultyLastName, facultyTypeID) VALUES ('Snyder', 2);
-INSERT INTO faculty (facultyLastName, facultyTypeID) VALUES ('Ventura', 1);
+INSERT INTO faculty (facultyLastName, facultyTypeID) 
+  VALUES ('Roe', 2), 
+  ('Oropesa', 2), 
+  ('Snyder', 2), 
+  ('Ventura', 1);
 
 -- What do the numbers mean, Mason?
-INSERT INTO phone_number (phoneNumber) values ("912-222-2500");
-INSERT INTO phone_number (phoneNumber) values ("777-234-9090");
-INSERT INTO phone_number (phoneNumber) values ("912-232-6605");
-INSERT INTO phone_number (phoneNumber) values ("658-120-0420");
+INSERT INTO phone_number (phoneNumber) 
+  VALUES ("912-222-2500"),
+  ("777-234-9090"),
+  ("912-232-6605"),
+  ("658-120-0420");
 
 -- Some families will be related to patients with different names
-INSERT INTO trusted_family (familyLastName, phoneNumberID) VALUES ("Bowers", 1);
-INSERT INTO trusted_family (familyLastName, phoneNumberID) VALUES ("Clints", 3);
-INSERT INTO trusted_family (familyLastName, phoneNumberID) VALUES ("Stewart", 2);
-INSERT INTO trusted_family (familyLastName, phoneNumberID) VALUES ("Howard", 4);
+INSERT INTO trusted_family (familyLastName, phoneNumberID) 
+  VALUES ("None", NULL),
+  ("Bowers", 1),
+   ("Clints", 3),
+   ("Stewart", 2),
+   ("Howard", 4);
 
 -- Just fucking kill me
-INSERT INTO patient (firstName, lastName, patientPriority, conditionDesc, familyID) VALUES ("Ronald", "Grace", 5, "Hernia", 2);
-INSERT INTO patient (firstName, lastName, patientPriority, conditionDesc, familyID) VALUES ("Todd", "Howard", 5, "Migraine", 3);
-INSERT INTO patient (firstName, lastName, patientPriority, conditionDesc, familyID) VALUES ("Will", "Bowers", 3, "Dimentia", 1);
-INSERT INTO patient (firstName, lastName, patientPriority, conditionDesc, familyID) VALUES ("Bill", "Shatner", 1, "Dimentia", 4);
+INSERT INTO patient (firstName, lastName, patientPriority, conditionDesc, familyID) 
+  VALUES ("Ronald", "Grace", 5, "Hernia", 2),
+  ("Todd", "Howard", 5, "Migraine", 3),
+  ("Will", "Bowers", 3, "Dimentia", 1),
+  ("Bill", "Shatner", 1, "Dimentia", 4);
+  ("Lorenzo", "Ventura", 5, "Ass Infection");
 
 -- PatientRoom to Patient is 1:1
-INSERT INTO patient_room (patientRoomNumber, patientID) VALUES (1132, 2);
-INSERT INTO patient_room (patientRoomNumber, patientID) VALUES (2002, 1);
+INSERT INTO patient_room (patientRoomNumber, patientID) 
+  VALUES (1132, 2),
+  (2002, 1);
 
 -- Faculty can be assigned to multiple patient rooms (ergo many patients) which will be a M:N
-INSERT INTO assigned_room (patientRoomID, facultyID) VALUES (2, 1);
-INSERT INTO assigned_room (patientRoomID, facultyID) VALUES (1, 4);
+INSERT INTO assigned_room (patientRoomID, facultyID) 
+  VALUES (2, 1),
+  (1, 4);
 
 -- This looks awful: it can lead to some repetition, therefore, the query had to be very specific
-INSERT INTO patient_med (patientID, medicationID) VALUES (1, 1);
-INSERT INTO patient_med (patientID, medicationID) VALUES (2, 1);
-INSERT INTO patient_med (patientID, medicationID) VALUES (2, 2);
+INSERT INTO patient_med (patientID, medicationID) 
+  VALUES (1, 1),
+   (2, 1),
+   (2, 2);
 
 -- Give me all your money
-INSERT INTO payment_summary (netPayment, patientID, paymentID) VALUES (0, 1, 1);
-INSERT INTO payment_summary (netPayment, patientID, paymentID) VALUES (0, 2, 1);
-INSERT INTO payment_summary (netPayment, patientID, paymentID) VALUES (0, 2, 2);
+INSERT INTO payment_summary (netPayment, patientID, paymentID) 
+  VALUES (0, 1, 1),
+  (0, 2, 1),
+  (0, 2, 2);
 
 -- For ease, the faculty should be able to reach a trusted family of the patient
 -- Although, I believe that this is worthless because you can already reach the family via the patients table
 -- Unless the faculty likes the family, but hates the patient, then sure...we can include it
-INSERT INTO works_with (familyID, facultyID, paymentSumID) VALUES (2, 1, 2);
-INSERT INTO works_with (familyID, facultyID, paymentSumID) VALUES (2, 2, 2);
-INSERT INTO works_with (familyID, facultyID, paymentSumID) VALUES (1, 3, 1);
+INSERT INTO works_with (familyID, facultyID, paymentSumID) 
+  VALUES (2, 1, 2),
+  (2, 2, 2),
+  (1, 3, 1);
