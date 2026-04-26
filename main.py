@@ -1,8 +1,9 @@
 from flask import Flask ,render_template, url_for, request, redirect
 from model.database import dbConnect
 
-import controller.InsertControls.InsertRows 
-import controller.getControls.GetTables
+import controller.GetControls.GetTables
+import controller.InsertControls.InsertRows
+
 
 # Connect with Flask
 app = Flask(__name__)
@@ -12,7 +13,7 @@ db = dbConnect()
 cursor = db.cursor()
 
 # Get table commands
-getTable = controller.getControls.GetTables
+getTable = controller.GetControls.GetTables
 addRow = controller.InsertControls.InsertRows
 
 # Home Route
@@ -286,6 +287,7 @@ def deleteFacultyType(id):
         return "failed to delete"
     
     return render_template('facultyType.html') #redirect('/home/faculty-options')
+
 @app.route('/home/faculty-options/deleteAssignment/<int:id>', methods=['POST', 'GET']) 
 def deleteAssign(id):
     try:

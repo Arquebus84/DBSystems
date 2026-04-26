@@ -1,3 +1,5 @@
+
+
 def getPatientTable():
     return 'SELECT p.patientID AS ID, p.firstName AS firstName, p.lastName AS lastName, p.patientPriority AS priority, ' \
     'p.conditionDesc AS conditionDesc, tf.familyLastName AS familyContact ' \
