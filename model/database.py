@@ -6,10 +6,10 @@ app = Flask(__name__)
 def check_connection():
     try:
         db = mysql.connector.connect(
-            host='localhost',
-            user='root',
-            password='ithertzwhenIP#1984',
-            database='nursingHomeDB'
+            host='',
+            user='',
+            password='',
+            database=''
         )
         return True
     except mysql.connector.Error as e:
