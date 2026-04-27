@@ -268,7 +268,7 @@ def newPatientMed():
                            patients=patients, medications=medications)
 # endregion
 
-# # #region deletion
+#region deletion
 @app.route('/home/patient-options/deletePatient/<int:id>', methods=['POST', 'GET']) # Possibly modify
 def deletePatient(id):
     # Deleting patient will also have to search for patientRoom paymentSummary and patientMed related to the patient 
@@ -403,10 +403,30 @@ def deletePatientMed(id):
         return 'failed to delete'
     return redirect('/home/medication-options/addPatientMedication')
 
-# #endregion
+#endregion
 
 # app.register_blueprint(insert_bp)
-app.register_blueprint(modify_bp)
+
+#region updating
+@app.route('/home/patient-options/updatePatient/<int:id, str:firstName, str:>', methods=['POST', 'GET'])
+def updatePatient(id, firstName, lastName, priority, condition, familyID):
+    query = 'UPDATE patient SET firstName = %s, lastName = %s, priority = %s, condition = %s, familyID = %s ' \
+    'WHERE patientID = %s'
+    values = [id, firstName, lastName, priority, condition, familyID]
+    cursor.execute(query, values)
+    cursor.fetchall()
+    patient = cursor.execute(GetTables.getPatientTable)
+    cursor.fetchall()
+    family = cursor.execute(GetTables.getAllFamilyTable)
+    cursor.fetchall()
+
+    if(request.method == 'POST'):
+        pass
+    else:
+        return render_template('/update_templates/updatePatient.html', patient=patient, family=family)
+    
+
+
 
 if(__name__ == '__main__'):
     app.run(debug=True)
