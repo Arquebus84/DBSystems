@@ -1,8 +1,9 @@
-from flask import Flask ,render_template, url_for, request, redirect
+from flask import Flask, render_template, url_for, request, redirect
 from model.database import dbConnect
 
 from controller.GetControls import GetTables
-from controller.InsertControls import InsertRows
+from controller.InsertControls.ModifyRows import modify_bp
+# from controller.DeleteControls.DeleteRows import delete_bp
 
 
 # Connect with Flask
@@ -11,10 +12,6 @@ app = Flask(__name__)
 # Connect to DB
 db = dbConnect()
 cursor = db.cursor()
-
-# # Get table commands
-# GetTables = GetTabless
-# addRow = InsertRows
 
 # Home Route
 @app.route('/')
@@ -95,7 +92,6 @@ def medication_options():
         return render_template('base.html')
 # endregion
 
-
 #region Insert new 
 
 def addPatientRow(firstName, lastName, priority, condition, familyID):
@@ -172,7 +168,6 @@ def addPatientMedRow(patientID, medicationID):
     values = [patientID, medicationID]
     cursor.execute(query, values)
     db.commit()
-#endregion
 
 # Adding new rows
 @app.route('/home/patient-options/addPatient', methods=['POST', 'GET'])
@@ -269,10 +264,11 @@ def newPatientMed():
     patients = cursor.fetchall()
     cursor.execute(GetTables.getMedicationTable())
     medications = cursor.fetchall()
-    return render_template('patientMed.html', patient_medications=patient_medications, patients=patients, medications=medications)
+    return render_template('patientMed.html', patient_medications=patient_medications, 
+                           patients=patients, medications=medications)
+# endregion
 
-
-# Deleting rows
+# # #region deletion
 @app.route('/home/patient-options/deletePatient/<int:id>', methods=['POST', 'GET']) # Possibly modify
 def deletePatient(id):
     # Deleting patient will also have to search for patientRoom paymentSummary and patientMed related to the patient 
@@ -308,7 +304,8 @@ def deletePatient(id):
         db.commit()
     except:
         return "failed to delete"
-    return redirect('/home')
+    return redirect('/home/patient-options/addPatient')
+
 @app.route('/home/patient-options/deleteFamily/<int:id>', methods=['POST', 'GET'])
 def deleteFamily(id):
     #Delete patients by id if trusted_family is deleted
@@ -323,7 +320,8 @@ def deleteFamily(id):
         db.commit()
     except:
         return 'failed to delete'
-    return redirect('/home')
+    return redirect('/home/patient-options/addFamily')
+
 @app.route('/home/patient-options/deleteRoom/<int:id>', methods=['POST', 'GET'])
 def deleteRoom(id):
     try:
@@ -335,6 +333,7 @@ def deleteRoom(id):
         db.commit()
     except:
         return 'failed to delete'
+    return redirect('/home/patient-options/addRoom')
 
 @app.route('/home/faculty-options/deleteFaculty/<int:id>', methods=['POST', 'GET'])
 def deleteFaculty(id):
@@ -348,8 +347,7 @@ def deleteFaculty(id):
         db.commit()
     except:
         return "failed to delete"
-    
-    return redirect('/home')
+    return redirect('/home/faculty-options/addFaculty')
 
 @app.route('/home/faculty-options/deleteFacultyType/<int:id>', methods=['POST', 'GET'])
 def deleteFacultyType(id):
@@ -363,8 +361,7 @@ def deleteFacultyType(id):
         db.commit()
     except:
         return "failed to delete"
-    
-    return render_template('facultyType.html') #redirect('/home/faculty-options')
+    return redirect('/home/faculty-options/addFacultyType')
 
 @app.route('/home/faculty-options/deleteAssignment/<int:id>', methods=['POST', 'GET']) 
 def deleteAssign(id):
@@ -377,6 +374,7 @@ def deleteAssign(id):
         db.commit()
     except:
         return 'failed to delete'
+    return redirect('/home/faculty-options/addAssignment')
 
 @app.route('/home/medication-options/deleteMedication/<int:id>', methods=['POST', 'GET']) 
 def deleteMedication(id):
@@ -390,8 +388,7 @@ def deleteMedication(id):
         db.commit()
     except:
         return "failed to delete"
-    
-    return redirect('/home')
+    return redirect('/home/medication-options/addMedication')
 
 @app.route('/home/medication-options/deletePatientMedication/<int:id>', methods=['POST', 'GET'])
 def deletePatientMed(id):
@@ -404,6 +401,12 @@ def deletePatientMed(id):
         db.commit()
     except:
         return 'failed to delete'
+    return redirect('/home/medication-options/addPatientMedication')
+
+# #endregion
+
+# app.register_blueprint(insert_bp)
+app.register_blueprint(modify_bp)
 
 if(__name__ == '__main__'):
     app.run(debug=True)
