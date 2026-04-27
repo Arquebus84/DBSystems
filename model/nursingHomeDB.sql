@@ -62,7 +62,7 @@ CREATE TABLE `faculty` (
   `facultyID` INTEGER NOT NULL UNIQUE AUTO_INCREMENT PRIMARY KEY,
   `facultyLastName` varchar(20) DEFAULT NULL,
   `facultyTypeID` INTEGER NOT NULL,
-  CONSTRAINT `faculty_ibfk_1` FOREIGN KEY (`facultyTypeID`) REFERENCES `faculty_type` (`facultyTypeID`)
+  CONSTRAINT `faculty_ibfk_1` FOREIGN KEY (`facultyTypeID`) REFERENCES `faculty_type` (`facultyTypeID`) ON DELETE CASCADE
 );
 
 --
@@ -72,7 +72,7 @@ CREATE TABLE `trusted_family` (
   `familyID` INTEGER NOT NULL UNIQUE AUTO_INCREMENT PRIMARY KEY,
   `familyLastName` varchar(20) DEFAULT NULL,
   `phoneNumberID` INTEGER DEFAULT NULL,
-  CONSTRAINT `trusted_family_ibfk_1` FOREIGN KEY (`phoneNumberID`) REFERENCES `phone_number` (`numberID`)
+  CONSTRAINT `trusted_family_ibfk_1` FOREIGN KEY (`phoneNumberID`) REFERENCES `phone_number` (`numberID`) ON DELETE CASCADE
 );
 
 --
@@ -97,7 +97,7 @@ CREATE TABLE `patient_room` (
   `patientRoomNumber` INTEGER NOT NULL,
   `patientID` INTEGER NOT NULL UNIQUE,
   PRIMARY KEY (`patientRoomID`,`patientID`),
-  CONSTRAINT `patient_room_ibfk_1` FOREIGN KEY (`patientID`) REFERENCES `patient` (`patientID`),
+  CONSTRAINT `patient_room_ibfk_1` FOREIGN KEY (`patientID`) REFERENCES `patient` (`patientID`) ON DELETE CASCADE,
   CONSTRAINT `patient_room_chk_1` CHECK ((`patientRoomNumber` > 0) AND (`patientRoomNumber` < 4000))
 );
 
@@ -109,8 +109,8 @@ CREATE TABLE `patient_med` (
   `patientID` INTEGER NOT NULL,
   `medicationID` INTEGER NOT NULL,
   PRIMARY KEY (`medicationID`,`patientID`),
-  CONSTRAINT `patient_med_ibfk_1` FOREIGN KEY (`medicationID`) REFERENCES `medication` (`medicationID`),
-  CONSTRAINT `patient_med_ibfk_2` FOREIGN KEY (`patientID`) REFERENCES `patient` (`patientID`)
+  CONSTRAINT `patient_med_ibfk_1` FOREIGN KEY (`medicationID`) REFERENCES `medication` (`medicationID`) ON DELETE CASCADE,
+  CONSTRAINT `patient_med_ibfk_2` FOREIGN KEY (`patientID`) REFERENCES `patient` (`patientID`) ON DELETE CASCADE
 );
 
 --
@@ -121,8 +121,8 @@ CREATE TABLE `payment_summary` (
   `netPayment` decimal(5, 2) DEFAULT NULL,
   `patientID` INTEGER NOT NULL,
   `paymentID` INTEGER NOT NULL,
-  CONSTRAINT `payment_summary_ibfk_2` FOREIGN KEY (`patientID`) REFERENCES `patient` (`patientID`),
-  CONSTRAINT `payment_summary_ibfk_1` FOREIGN KEY (`paymentID`) REFERENCES `payment_system` (`paymentID`)
+  CONSTRAINT `payment_summary_ibfk_2` FOREIGN KEY (`patientID`) REFERENCES `patient` (`patientID`) ON DELETE CASCADE,
+  CONSTRAINT `payment_summary_ibfk_1` FOREIGN KEY (`paymentID`) REFERENCES `payment_system` (`paymentID`) ON DELETE CASCADE
 );
 
 --
@@ -133,7 +133,7 @@ CREATE TABLE `assigned_room` (
   `patientRoomID` INTEGER NOT NULL UNIQUE,
   `facultyID` INTEGER NOT NULL,
   `floorNumber` INTEGER,
-  CONSTRAINT `assigned_room_ibfk_1` FOREIGN KEY (`patientRoomID`) REFERENCES `patient_room` (`patientroomID`),
+  CONSTRAINT `assigned_room_ibfk_1` FOREIGN KEY (`patientRoomID`) REFERENCES `patient_room` (`patientroomID`) ON DELETE CASCADE,
   CONSTRAINT `assigned_room_chk_1` CHECK (((`floorNumber` > 0) and (`floorNumber` < 4)))
 );
 
@@ -145,9 +145,9 @@ CREATE TABLE `works_with` (
   `facultyID` INTEGER NOT NULL,
   `paymentSumID` INTEGER NOT NULL,
   PRIMARY KEY (`facultyID`, `familyID`),
-  CONSTRAINT `works_with_ibfk_1` FOREIGN KEY (`familyID`) REFERENCES `trusted_family` (`familyID`),
-  CONSTRAINT `works_with_ibfk_2` FOREIGN KEY (`facultyID`) REFERENCES `faculty` (`facultyID`),
-  CONSTRAINT `works_with_ibfk_3` FOREIGN KEY (`paymentSumID`) REFERENCES `payment_summary` (`paymentSumID`)
+  CONSTRAINT `works_with_ibfk_1` FOREIGN KEY (`familyID`) REFERENCES `trusted_family` (`familyID`) ON DELETE CASCADE,
+  CONSTRAINT `works_with_ibfk_2` FOREIGN KEY (`facultyID`) REFERENCES `faculty` (`facultyID`) ON DELETE CASCADE,
+  CONSTRAINT `works_with_ibfk_3` FOREIGN KEY (`paymentSumID`) REFERENCES `payment_summary` (`paymentSumID`) ON DELETE CASCADE
 );
 
 -- NOTE:
@@ -201,7 +201,7 @@ INSERT INTO patient (firstName, lastName, patientPriority, conditionDesc, family
   ("Todd", "Howard", 5, "Migraine", 5),
   ("Will", "Bowers", 3, "Dimentia", 2),
   ("Bill", "Shatner", 1, "Dimentia", 4),
-  ("Lorenzo", "Ventura", 5, "Ass Infection", 1);
+  ("Lorenzo", "Ventura", 5, "Arthritus Pain", 1);
 
 -- PatientRoom to Patient is 1:1
 INSERT INTO patient_room (patientRoomNumber, patientID) 

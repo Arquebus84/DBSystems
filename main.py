@@ -408,7 +408,7 @@ def deletePatientMed(id):
 # app.register_blueprint(insert_bp)
 
 #region updating
-@app.route('/home/patient-options/updatePatient/<int:id, str:firstName, str:>', methods=['POST', 'GET'])
+@app.route('/home/patient-options/updatePatient/<int:id>', methods=['POST', 'GET'])
 def updatePatient(id, firstName, lastName, priority, condition, familyID):
     query = 'UPDATE patient SET firstName = %s, lastName = %s, priority = %s, condition = %s, familyID = %s ' \
     'WHERE patientID = %s'
