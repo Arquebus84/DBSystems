@@ -407,50 +407,6 @@ def deletePatientMed(id):
 
 #endregion
 
-#region updating
-# def getPatientUpdate(firstName, lastName, priority, condition, familyID, patientID):
-#     query = 'UPDATE patient SET firstName = %s, lastName = %s, patientPriority = %s, conditionDesc = %s, familyID = %s ' \
-#     'WHERE patientID = %s'
-#     values = [firstName, lastName, priority, condition, familyID, id]
-
-# def getFacultyTypeUpdate(facultyType, facultyTypeID):
-#     query = 'UPDATE faculty_type SET facultyType = %s WHERE facultyTypeID = %s'
-#     values = [facultyType, facultyTypeID]
-#     cursor.execute(query, values)
-#     db.commit()
-
-# @app.route('/home/patient-options/updatePatient/<int:id>', methods=['POST', 'GET'])
-# def updatePatient(id):
-#     query = 'UPDATE patient SET firstName = %s, lastName = %s, patientPriority = %s, conditionDesc = %s, familyID = %s ' \
-#     'WHERE patientID = %s'
-#     values = [firstName, lastName, priority, condition, familyID, id]
-#     cursor.execute(query, values)
-#     cursor.fetchall()
-#     patient = cursor.execute(GetTables.getPatientTable())
-#     cursor.fetchall()
-#     family = cursor.execute(GetTables.getAllFamilyTable())
-#     cursor.fetchall()
-
-#     if(request.method == 'POST'):
-#         pass
-#     else:
-#         return render_template('/update_templates/updatePatient.html', patient=patient, family=family)
-    
-# @app.route('/home/faculty-options/updateFacultyType/<int:id>', methods=['POST', 'GET'])
-# def updateFacultyType(id):
-#     if request.method=='POST': 
-#         facultyType=str(request.form['facultyType']).strip()
-#         try:
-#             getFacultyTypeUpdate(facultyType, id)
-#             db.commit()
-#             return redirect(url_for('/home'))
-#         except Exception as e:
-#             return 'error updating data with ', {e}
-#     else:
-#         cursor.execute('SELECT facultyType FROM faculty_type WHERE facultyTypeID = %s', (id,))
-#         row = cursor.fetchone()
-#         facultyType = str(row[0]) if row else ""
-#         return render_template('update_templates/updateFacultyType.html', facultyType=facultyType, id=id)
 
 if(__name__ == '__main__'):
     app.run(debug=True)

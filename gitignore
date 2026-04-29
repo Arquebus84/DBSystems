@@ -1,3 +1,5 @@
-/.env
-/env
-/__pycache__
+.env/
+env/
+.vscode/
+__pycache__/
+model/databaseTest.py/
