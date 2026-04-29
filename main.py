@@ -274,34 +274,34 @@ def deletePatient(id):
     try:
         # Search for assigned_room
         query = 'DELETE FROM patient WHERE patientID = %s'
-        query2 = 'ALTER TABLE patient AUTO_INCREMENT = 1'
+        # query2 = 'ALTER TABLE patient AUTO_INCREMENT = 1'
         # query0 = 'SELECT patientRoomID FROM patient_room WHERE patientID = %s'
-        # cursor.execute(query0, values)
-        # roomID = None
-        # for x in cursor:
-        #     roomID = x[0]
-        # cursor.fetchall()
-        # if(roomID != None):
-        #     query1 = 'DELETE FROM assigned_room WHERE patientRoomID = %s'
-        #     value2 = [roomID]
-        #     cursor.execute(query1, value2)
-        #     cursor.fetchall()
-        #     query2 = 'DELETE FROM patient_room WHERE patientRoomID = %s'
-        #     cursor.execute(query2, value2)
-        #     cursor.fetchall()
-        # query3 = 'DELETE FROM payment_summary WHERE patientID = %s'
-        # cursor.execute(query3, values)
-        # cursor.fetchall()
-        # query4 = 'DELETE FROM patient_med WHERE patientID = %s'
-        # cursor.execute(query4, values)
-        # cursor.fetchall()
-        # query5 = 'DELETE FROM patient WHERE patientID = %s'
-        # query6 = 'ALTER TABLE patient AUTO_INCREMENT = 1'
-        # cursor.execute(query5, values)
-        # cursor.fetchall()
-        # cursor.execute(query6)
         cursor.execute(query, values)
-        cursor.execute(query2)
+        roomID = None
+        for x in cursor:
+            roomID = x[0]
+        cursor.fetchall()
+        if(roomID != None):
+            query1 = 'DELETE FROM assigned_room WHERE patientRoomID = %s'
+            value2 = [roomID]
+            cursor.execute(query1, value2)
+            cursor.fetchall()
+            query2 = 'DELETE FROM patient_room WHERE patientRoomID = %s'
+            cursor.execute(query2, value2)
+            cursor.fetchall()
+        query3 = 'DELETE FROM payment_summary WHERE patientID = %s'
+        cursor.execute(query3, values)
+        cursor.fetchall()
+        query4 = 'DELETE FROM patient_med WHERE patientID = %s'
+        cursor.execute(query4, values)
+        cursor.fetchall()
+        query5 = 'DELETE FROM patient WHERE patientID = %s'
+        query6 = 'ALTER TABLE patient AUTO_INCREMENT = 1'
+        cursor.execute(query5, values)
+        cursor.fetchall()
+        cursor.execute(query6)
+        # cursor.execute(query, values)
+        # cursor.execute(query2)
         cursor.fetchall()
         db.commit()
     except:
