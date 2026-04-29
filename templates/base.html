@@ -62,17 +62,17 @@
         
         <div class="centerTables">
             <div class="tables">
-                {% block patient %}{% endblock %}
-                {% block family %}{% endblock %}
-                {% block room %}{% endblock %}
+                {% block patient %}{% endblock %} {% block updatePatient %}{% endblock %}
+                {% block family %}{% endblock %} {% block updateFamily %}{% endblock %}
+                {% block room %}{% endblock %} {% block updateRoom %}{% endblock %}
                 {% block summary %}{% endblock %}
 
-                {% block faculty %}{% endblock %}
-                {% block facultyType %}{% endblock %}
-                {% block assignment %}{% endblock %}
+                {% block faculty %}{% endblock %} {% block updateFaculty %}{% endblock %}
+                {% block facultyType %}{% endblock %} {% block updateFacultyType %}{% endblock %}
+                {% block assignment %}{% endblock %} {% block updateAssignment %}{% endblock %}
 
-                {% block medication %}{% endblock %}
-                {% block patientMed %}{% endblock %}
+                {% block medication %}{% endblock %} {% block updateMedication %}{% endblock %}
+                {% block patientMed %}{% endblock %} {% block updatePatientMed %}{% endblock %}
             </div>
         </div>
     </div>

@@ -2,9 +2,6 @@ from flask import Flask, render_template, url_for, request, redirect
 from model.database import dbConnect
 
 from controller.GetControls import GetTables
-from controller.InsertControls.ModifyRows import modify_bp
-# from controller.DeleteControls.DeleteRows import delete_bp
-
 
 # Connect with Flask
 app = Flask(__name__)
@@ -276,35 +273,40 @@ def deletePatient(id):
     values = [id]
     try:
         # Search for assigned_room
-        query0 = 'SELECT patientRoomID FROM patient_room WHERE patientID = %s'
-        cursor.execute(query0, values)
-        roomID = None
-        for x in cursor:
-            roomID = x[0]
+        query = 'DELETE FROM patient WHERE patientID = %s'
+        query2 = 'ALTER TABLE patient AUTO_INCREMENT = 1'
+        # query0 = 'SELECT patientRoomID FROM patient_room WHERE patientID = %s'
+        # cursor.execute(query0, values)
+        # roomID = None
+        # for x in cursor:
+        #     roomID = x[0]
+        # cursor.fetchall()
+        # if(roomID != None):
+        #     query1 = 'DELETE FROM assigned_room WHERE patientRoomID = %s'
+        #     value2 = [roomID]
+        #     cursor.execute(query1, value2)
+        #     cursor.fetchall()
+        #     query2 = 'DELETE FROM patient_room WHERE patientRoomID = %s'
+        #     cursor.execute(query2, value2)
+        #     cursor.fetchall()
+        # query3 = 'DELETE FROM payment_summary WHERE patientID = %s'
+        # cursor.execute(query3, values)
+        # cursor.fetchall()
+        # query4 = 'DELETE FROM patient_med WHERE patientID = %s'
+        # cursor.execute(query4, values)
+        # cursor.fetchall()
+        # query5 = 'DELETE FROM patient WHERE patientID = %s'
+        # query6 = 'ALTER TABLE patient AUTO_INCREMENT = 1'
+        # cursor.execute(query5, values)
+        # cursor.fetchall()
+        # cursor.execute(query6)
+        cursor.execute(query, values)
+        cursor.execute(query2)
         cursor.fetchall()
-        if(roomID != None):
-            query1 = 'DELETE FROM assigned_room WHERE patientRoomID = %s'
-            value2 = [roomID]
-            cursor.execute(query1, value2)
-            cursor.fetchall()
-            query2 = 'DELETE FROM patient_room WHERE patientRoomID = %s'
-            cursor.execute(query2, value2)
-            cursor.fetchall()
-        query3 = 'DELETE FROM payment_summary WHERE patientID = %s'
-        cursor.execute(query3, values)
-        cursor.fetchall()
-        query4 = 'DELETE FROM patient_med WHERE patientID = %s'
-        cursor.execute(query4, values)
-        cursor.fetchall()
-        query5 = 'DELETE FROM patient WHERE patientID = %s'
-        query6 = 'ALTER TABLE patient AUTO_INCREMENT = 1'
-        cursor.execute(query5, values)
-        cursor.fetchall()
-        cursor.execute(query6)
         db.commit()
     except:
         return "failed to delete"
-    return redirect('/home/patient-options/addPatient')
+    return redirect('/home')
 
 @app.route('/home/patient-options/deleteFamily/<int:id>', methods=['POST', 'GET'])
 def deleteFamily(id):
@@ -405,19 +407,28 @@ def deletePatientMed(id):
 
 #endregion
 
-# app.register_blueprint(insert_bp)
-
 #region updating
-@app.route('/home/patient-options/updatePatient/<int:id>', methods=['POST', 'GET'])
-def updatePatient(id, firstName, lastName, priority, condition, familyID):
-    query = 'UPDATE patient SET firstName = %s, lastName = %s, priority = %s, condition = %s, familyID = %s ' \
+def getPatientUpdate(firstName, lastName, priority, condition, familyID, patientID):
+    query = 'UPDATE patient SET firstName = %s, lastName = %s, patientPriority = %s, conditionDesc = %s, familyID = %s ' \
     'WHERE patientID = %s'
-    values = [id, firstName, lastName, priority, condition, familyID]
+    values = [firstName, lastName, priority, condition, familyID, id]
+
+def getFacultyTypeUpdate(facultyType, facultyTypeID):
+    query = 'UPDATE faculty_type SET facultyType = %s WHERE facultyTypeID = %s'
+    values = [facultyType, facultyTypeID]
+    cursor.execute(query, values)
+    db.commit()
+
+@app.route('/home/patient-options/updatePatient/<int:id>', methods=['POST', 'GET'])
+def updatePatient(id):
+    query = 'UPDATE patient SET firstName = %s, lastName = %s, patientPriority = %s, conditionDesc = %s, familyID = %s ' \
+    'WHERE patientID = %s'
+    values = [firstName, lastName, priority, condition, familyID, id]
     cursor.execute(query, values)
     cursor.fetchall()
-    patient = cursor.execute(GetTables.getPatientTable)
+    patient = cursor.execute(GetTables.getPatientTable())
     cursor.fetchall()
-    family = cursor.execute(GetTables.getAllFamilyTable)
+    family = cursor.execute(GetTables.getAllFamilyTable())
     cursor.fetchall()
 
     if(request.method == 'POST'):
@@ -425,8 +436,21 @@ def updatePatient(id, firstName, lastName, priority, condition, familyID):
     else:
         return render_template('/update_templates/updatePatient.html', patient=patient, family=family)
     
-
-
+@app.route('/home/faculty-options/updateFacultyType/<int:id>', methods=['POST', 'GET'])
+def updateFacultyType(id):
+    if request.method=='POST': 
+        facultyType=str(request.form['facultyType']).strip()
+        try:
+            getFacultyTypeUpdate(facultyType, id)
+            db.commit()
+            return redirect(url_for('/home'))
+        except Exception as e:
+            return 'error updating data with ', {e}
+    else:
+        cursor.execute('SELECT facultyType FROM faculty_type WHERE facultyTypeID = %s', (id,))
+        row = cursor.fetchone()
+        facultyType = str(row[0]) if row else ""
+        return render_template('update_templates/updateFacultyType.html', facultyType=facultyType, id=id)
 
 if(__name__ == '__main__'):
     app.run(debug=True)

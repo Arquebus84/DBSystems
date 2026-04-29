@@ -19,8 +19,8 @@
                 <td class="tableCellFormat">{{ patient[5] }}</td>
                 <td class="tableCellFormat">
                     <a href="{{url_for('deletePatient', id=patient[0]) }}">Delete</a>
-                    <a href="{{ url_for('updatePatient', id=patient[0], firstName=patient[1], 
-                    lastName=patient[2], priority=patient[3], condition=patient[4], familyID=patient[5]) }}">Update</a>
+                    <a href="{{ url_for('updatePatient', firstName=patient[1], lastName=patient[2], 
+                    priority=patient[3], condition=patient[4], familyID=patient[5], id=patient[0]) }}">Update</a>
                 </td>
             </tr>
             {% endfor %}
@@ -43,15 +43,4 @@
         </form>
     </div>
 </div>
-<!-- <div>
-    <table class="tableFormat">
-        <tr>
-            {% for fam in family %}
-                <tr>
-                    <td class="tableCellFormat">{{ fam[1] }}</td>
-                </tr>
-            {% endfor %}
-        </tr>
-    </table>
-</div> -->
 {% endblock %}
