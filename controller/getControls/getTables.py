@@ -35,13 +35,13 @@ def getFacultyTypeTable():
     return 'SELECT ft.facultyTypeID, ft.facultyType FROM faculty_type ft'
 
 def getAssignTable():
-    return 'SELECT ar.assignedRoomID, f.facultyLastName AS facultyName, p.firstName AS firstName, p.lastName AS lastName, pr.patientRoomNumber AS roomNum, ' \
-    'case ' \
-    'when (pr.patientRoomNumber >= 3000) then ifnull(ar.floorNumber, 3) ' \
-    'when (pr.patientRoomNumber >= 2000) then ifnull(ar.floorNumber, 2) ' \
-    'else ifnull(ar.floorNumber, 1) ' \
-    'end AS FloorNumber from assigned_room ar ' \
-    'join patient_room pr join patient p join faculty f ' \
+    return 'SELECT ' \
+    'ar.assignedRoomID, f.facultyLastName AS facultyName, p.firstName AS firstName, p.lastName AS lastName, pr.patientRoomNumber AS roomNum, ' \
+    '(pr.patientRoomNumber DIV 1000) AS FloorNumber ' \
+    'from assigned_room ar ' \
+    'join patient_room pr ' \
+    'join patient p ' \
+    'join faculty f ' \
     'where ar.patientRoomID = pr.patientRoomID AND ar.facultyID = f.facultyID AND pr.patientID = p.patientID'
 
 def getMedicationTable():
